@@ -3,54 +3,67 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link href="chat.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="window" class="container-fluid">
-        <div class="row">
-            <div id="side_bar" class="col-md-1">
-                <div class="row">
-                    <div id="col1_row1">
-                         <img id="profile_icon" src="data/profile_picutres/mario.png"></img>
-                         <div class="online_indicator"></div>
-                    </div>
-                    <div id="col1_row2" class="border-top border-bottom">
-
-                    </div>
-                    <div id="col1_row3" class= margin-top">
-                        <img class="col1_icons" src="data/icons/bell_icon.png"></img>
-                    </div>
-                </div>
-            </div>
-            <div id="chats_bar" class="col-md-3">
-                <div class="row border">
-                    <div id="top" class="col-12 border">
-                      <!-- Top section -->
-                    </div>
-                    <div id="chats" class="col-12 border overflow-auto">
-                      <!-- Chats section -->
-                      <h1>hey</h1>
-                    </div>
-                  </div>
-            </div>
-            <div id="right_side" class="col-md-8">
-                <div class="row">
-                    <div id="top"class="col-12 border">
-                        <!-- Top section -->
-                        <h1>hey</h1>
-                    </div>
-                    <div id="chat"class="col-12 border overflow-auto">
-                        <!-- Chat section -->
-                        <h1>hey</h1>
-                    </div>
-                    <div id="input_box" class="col-12 border">
-                        <!-- Input box section -->
-                        <h1>hey</h1>
-                    </div>
-
-                </div>
-
-            </div>
+    <div id="side_bar">
+        <div id="user_profile">
+            <img class="profile_pic" src="data/profile_picutres/mario.png">  
+            <div class="online_sign"></div> 
         </div>
+        <p id="username">Mario M.</p> 
+        <div class="seperator"></div>
+        <div id="icon_menu">
+            <img id="chat_icon" class="icon" src="data/icons/chat_icon.png">
+            <img class="icon" src="data/icons/phone_icon.png">
+            <img class="icon" src="data/icons/bell_icon.png">
+            <img class="icon" src="data/icons/settings_icon.png">
+        </div>          
+    </div>
+    <div id="chats_bar">
+        <div id="chat_bar_line1">
+            <span id="chats_title">Messages</span>
+            <span id="msgs_number">(3)</span>
+            <span id="more_icon">+</span>
+        </div>
+        <div id="search_box">
+            <input type="text" placeholder="Search">
+            <img id="search_icon" src="data/icons/search_icon.png">
+        </div>
+        <div id="pinned_title">
+            <span id="pinned_text">Pinned Conversations</span>
+            <span id="dots">...</span>
+        </div>
+        <div id="pinned_chats">
+            <div class="chat_preview">
+                <img class="profile_pic" src="data/profile_picutres/luigi.png">
+                <span class="username">Luigi Mario</span>
+                <span class="timestamp">28/04/23 | 14:27:31 PM</span>
+                <span class="msg_preview new_message">Mamamia!!!</span>
+            </div>  
+        </div>
+        <span id="all_text">All</span>
+        <div id="chats">
+            <div id="current_chat" class="chat_preview">
+                <img class="profile_pic" src="data/profile_picutres/toad.png">
+                <span class="username">Blue Toad</span>
+                <span class="timestamp">24/04/23 | 19:11:03 PM</span>
+                <span class="msg_preview">Lets-a-go!</span>
+                <img class="seen_icon" src="data/icons/seen_icon_marked.PNG">
+            </div> 
+            <div class="chat_preview">
+                <img class="profile_pic" src="data/profile_picutres/bowser.png">
+                <span class="username">King Bowser</span>
+                <span class="timestamp">25/04/23 | 3:00:00 AM</span>
+                <span class="msg_preview">Muhahaha!</span>
+                <img class="seen_icon" src="data/icons/seen_icon.PNG">
+            </div> 
+        </div>
+    </div>
+    <div id="chat_window">
+            
     </div>
 </body>
 </html>
