@@ -1,0 +1,32 @@
+#log-screen{
+    height: 72%;
+}
+
+#upload-img{
+    position: relative;
+    width: 73%;
+    left: 25%;
+    bottom: 30%;
+    top: 0.50%;
+}
+
+#img-place{
+    top: 5%;
+    width: 20%;
+}
+
+.screen-foot{
+    position: relative;
+    top: 1%;
+    bottom: 4%;
+    left: 1%;
+}
+
+#register{
+    top: 3%;
+    bottom: 1%;
+    left: 25%;
+    right: 25%;
+}
+
+
