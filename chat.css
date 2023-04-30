@@ -1,5 +1,17 @@
 body {
-    background-color: #fBfBfB;
+    overflow: hidden;
+  }
+
+#background {
+    background-image: url(resources/backgrounds/fitting_blue.png); 
+    background-repeat: no-repeat;
+    position: absolute;
+    width: 110%;
+    height: 100%;
+    top: 0;
+    left: 0px;
+    left: -20px;
+    z-index: -1;
 }
 
 #side_bar {
@@ -8,7 +20,7 @@ body {
     width: 68.74px;
     height: 580px;
     margin-top: 50px;
-    margin-left: 240px;
+    margin-left: 80px;
     background-color: #EEEEEE;
     border-top: 1px;
     border-bottom: 0;
@@ -79,7 +91,17 @@ body {
     padding-bottom: 4px;
     margin-bottom: 36px;
     border-bottom: solid #0495FF 1.5px;
+}
 
+#logout_icon {
+    position: relative;
+    right: 9px;
+    background-color: rgba(255, 82, 82, 0.4);
+    padding: 10px;
+    border-radius: 25%;
+    height: 35px;
+    width: 35px;
+    top: 150px;
 }
 
 .seperator {
@@ -96,7 +118,7 @@ body {
     top: 0px;
     left: 0px;
     margin-top: 50px;
-    margin-left: 308.5px;
+    margin-left: 148.5px;
     width: 300px;
     background-color: #ffffff;
     height: 580px;
@@ -277,8 +299,8 @@ body {
     position: absolute;
     background-color: #FFFFFF;
     top: 50px;
-    left: 618.5px;
-    width: 55%;
+    left: 458.5px;
+    width: 65%;
     height: 580px;
     border-top: 1px;
     border-bottom: 0;
@@ -393,6 +415,7 @@ body {
 .message {
     display: flex;
     position: relative;
+    margin-top: -10px;
     word-wrap: break-word;
     max-width: 60%;
     width: fit-content;
@@ -408,23 +431,91 @@ body {
 
 .msg_and_time {
     position: flex;
-    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
 }
 
 .msg_and_time .message_time, .msg_and_time .message_time_user {
-    position: absolute;
+    position: relative;
     text-align: left;
     font: normal normal normal 14px/25px Poppins;
     letter-spacing: 0.32px;
-    color: #707070;
-    opacity: 0.5;
+    color: rgba(112, 112, 112, 0.5);
     font-weight: 500;
     margin-left: 2px;
-    margin-top: 30px;
+    margin-top: 2px;
 }
 
+.msg_and_time .message_time_user {
+    align-self: flex-end;
+    flex-direction: row;
+}
 
+.msg_and_time .icon {
+    display: inline-flex;
+    flex-direction: row;
+    position: absolute;
+    height: 25px;
+    width: 25px;
+    margin: 0;
+    align-self: flex-end;
+    right: 75px;
+}
+
+.message_date {
+    position: relative;
+    align-self: center;
+    font: normal normal normal 14px/24px Poppins;
+    letter-spacing: 0.18px;
+    font-weight: 500;
+    color: #707070;
+    opacity: 1;
+}
+
+#input_box {
+    position: absolute;
+    height: 70px;
+    width: 100%;
+    top: 500px;
+}
+
+#input_box .icon{
+    top: 26px;
+    left: 2%;
+    height: 25px;
+    width: 25px;
+}
+
+#input_box input {
+    position: absolute;
+    border: none;
+    outline: none;
+    height: 30px;
+    bottom: 19px;
+    left: 6%;
+    width: 80%;
+    font: normal normal normal 16px/27px Poppins;
+    letter-spacing: 0.18px;
+    color: #707070;
+    z-index: 100;
+}
+
+#input_icons {
+    display: flex;
+    position: relative;
+    bottom: 65px;
+    right: 4%;
+    justify-content: flex-end;
+}
+
+#input_icons .icon:first-child {
+    width: 20px;
+}
+
+#input_icons .icon {
+    position: relative;
+    width: 25px;
+    margin-right: 3%;
+}
 
 

@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div id="background"></div>
     <div id="side_bar">
         <div id="user_profile">
             <img class="profile_pic" src="resources/profile_picutres/mario.png">  
@@ -20,6 +21,7 @@
             <img class="icon" src="resources/icons/phone_icon.png">
             <img class="icon" src="resources/icons/bell_icon.png">
             <img class="icon" src="resources/icons/settings_icon.png">
+            <img id="logout_icon" src="resources/icons/exit_icon.png">
         </div>          
     </div>
     <div id="chats_bar">
@@ -76,13 +78,15 @@
             <img class="icon" src="resources/icons/search_icon.png">
             <img id="dots_icon" class="icon" src="resources/icons/dots_icon.png">
         </div>  
-        <div class="message_date"></div>
         <div id="messages">
             <div class="msg_and_time">
+                <div class="message_date">
+                    <p>Monday 24/04/23</p>
+                </div>
                 <div class="message incoming_message">
                     <p>Thasnk you Mario! but out princess is in another castle!</p>
                 </div>
-                <span class="message_time_user">
+                <span class="message_time">
                     19:11:03 PM
                 </span>
             </div>
@@ -92,7 +96,16 @@
                 </div>
                 <span class="message_time_user">
                     19:11:03 PM
+                    <img class="icon" src="resources/icons/seen_icon.png">
                 </span>
+            </div>
+        </div>
+        <div id="input_box">
+            <img class="icon" src="resources/icons/attchement_icon.png">
+            <input type="text" placeholder="Message Blue Toad...">
+            <div id="input_icons">
+                <img class="icon" src="resources/icons/mic_icon.png">
+                <img class="icon" src="resources/icons/emoji_icon.png">
             </div>
         </div>
      </div>
