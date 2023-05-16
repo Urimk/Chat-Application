@@ -135,6 +135,9 @@ body {
   border-style: solid;
   border-radius: 1px;
   box-sizing: content-box;
+  max-height: 580px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #chat_bar_line1 {
@@ -312,7 +315,7 @@ body {
   top: 50px;
   left: 458.5px;
   width: 65%;
-  height: 580px;
+  height: 581px;
   border-top: 1px;
   border-bottom: 0;
   border-left: 0;
@@ -360,10 +363,10 @@ body {
 
 .online_sign_off {
   position: absolute;
-  top: 62%;
-  left: 162%;
-  width: 25%;
-  height: 25%;
+  top: 72%;
+  left: 133%;
+  width: 20%;
+  height: 20%;
   border-radius: 55%;
   background-color: #FFFFFF;
   border-color: #d6d6d6;
@@ -405,9 +408,11 @@ body {
   border-left: 0;
   border-radius: 2px;
   border-width: 3px;
+  max-height: 570px;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  flex-direction: column-reverse;
 }
 
 .incoming_message {
@@ -424,9 +429,7 @@ body {
 }
 
 .message {
-  display: flex;
   position: relative;
-  margin-top: -10px;
   word-wrap: break-word;
   max-width: 60%;
   width: fit-content;
@@ -435,6 +438,9 @@ body {
   font: normal normal normal 20px/30px Poppins;
   letter-spacing: 0.2px;
 }
+
+
+
 
 .incoming_message p, .user_message p {
   margin-bottom: 0;
@@ -611,6 +617,34 @@ body {
   font-weight: bold;
   display: inline-block;
   padding: 1% 10% 1% 10%;
+}
+
+#chat_window .pic_and_status{
+  position: absolute;
+  height: 55px;
+  width: 55px;
+  top: 2.5%;
+  left: 2.5%;
+  margin-left: 0%;
+}
+
+#chat_window .username {
+  position: absolute;
+  bottom: 535px;
+  margin-left: 95px;
+  font-size: 18px;
+  font-weight: 900;
+  margin-top: 8%;
+  font-family: Poppins;
+  color: #707070;
+  margin-top: 8%;
+  color: #707070;
+  letter-spacing: 0.4px;
+  width: 220%;
+}
+
+.chat_preview .online_sign_off {
+  all: unset;
 }
 
 

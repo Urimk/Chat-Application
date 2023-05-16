@@ -1,10 +1,11 @@
-function ProfilePic({ pic }) {
+function ProfilePic({ pic, online }) {
     return (
-        <div class="pic_and_status">
-            <img className="profile_pic" src={ pic }></img>
-            <div className="online_sign"></div> 
-        </div>
+      <div className="pic_and_status">
+        <img className="profile_pic" src={pic} />
+        <div className={online ? "online_sign" : "online_sign_off"}></div>
+      </div>
     );
-}
-
-export default ProfilePic;
+  }
+  
+  export default ProfilePic;
+  

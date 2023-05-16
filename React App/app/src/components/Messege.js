@@ -1,17 +1,16 @@
+function Message({ text, time, incoming }) {
+    const messageClass = incoming ? "message incoming_message" : "message user_message";
+    const messageTineClass = incoming ? "message_time" : "message_time_user";
 
-
-function Message () {
     return (
-        <div className  ="msg_and_time">
-            <div className="message_date">
-                <p></p>
-            </div>
-            <div className="message incoming_message">
-                <p></p>
-            </div>
-            <span className="message_time"></span>
+      <div className="msg_and_time">
+        <div className={messageClass}>
+          <p>{text}</p>
         </div>
+        <span className={messageTineClass}>{time}</span>
+      </div>
     );
-}
-
-export default Message;
+  }
+  
+  export default Message;
+  

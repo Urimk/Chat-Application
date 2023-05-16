@@ -1,18 +1,25 @@
 import React, { useState, useRef, useEffect } from "react";
 import Contact from "./Contact";
 
-function ContactsBar() {
+function ContactsBar( { onContactSelect }) {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [newContactName, setNewContactName] = useState("");
+  const [newProfilePic, setNewProfilePic] = useState("");
   const [contacts, setContacts] = useState([]);
   const overlayRef = useRef(null);
 
   const handleAddContact = () => {
+
+    if (newContactName.trim() === "") {
+        return;
+      }
+
     setContacts((prevContacts) => [
-        ...prevContacts,
-        { username: newContactName }
-      ]);
+      ...prevContacts,
+      { username: newContactName, profilePic: newProfilePic || "profile_pics/NO_PIC.png" },
+    ]);
     setNewContactName("");
+    setNewProfilePic("");
     setPopupVisible(false);
   };
 
@@ -20,6 +27,9 @@ function ContactsBar() {
     setPopupVisible(!isPopupVisible);
   };
 
+  const handleContactClick = (username, profilePic) => {
+    onContactSelect(username, profilePic);
+  };
 
   const handleOverlayClick = () => {
     if (isPopupVisible) {
@@ -48,7 +58,8 @@ function ContactsBar() {
       </div>
       <div id="chats">
         {contacts.map((contact, index) => (
-          <Contact key={index} username={contact.username} />
+          <Contact key={index} username={contact.username} profilePic={contact.profilePic}
+          onClick={() => handleContactClick(contact.username , contact.profilePic)} />
         ))}
         {/* Render the popup if exsits */}
         {isPopupVisible && (
