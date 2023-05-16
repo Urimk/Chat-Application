@@ -1,7 +1,7 @@
-function ProfilePic() {
+function ProfilePic({ pic }) {
     return (
-        <div id="user_profile">
-            <img className="profile_pic" src="public/profile_picutres/mario.png"></img>
+        <div class="pic_and_status">
+            <img className="profile_pic" src={ pic }></img>
             <div className="online_sign"></div> 
         </div>
     );

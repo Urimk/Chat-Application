@@ -4,7 +4,7 @@ import ProfilePic from "./ProfilePic.js";
 function LeftBar() {
     return (
         <div id="side_bar">
-            <ProfilePic />
+            <ProfilePic pic="profile_pics/NO_PIC.png"/>
             <p id="username"></p> 
             <div className="seperator"></div> 
             <LeftBarButtons />
