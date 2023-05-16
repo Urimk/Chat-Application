@@ -1,9 +1,9 @@
 function ProfilePic() {
     return (
-        <>
-            <img class="profile_pic" src="resources/profile_picutres/mario.png"></img>
-            <div class="online_sign"></div> 
-        </>
+        <div id="user_profile">
+            <img className="profile_pic" src="public/profile_picutres/mario.png"></img>
+            <div className="online_sign"></div> 
+        </div>
     );
 }
 

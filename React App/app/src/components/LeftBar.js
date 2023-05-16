@@ -3,12 +3,12 @@ import ProfilePic from "./ProfilePic.js";
 
 function LeftBar() {
     return (
-        <>
+        <div id="side_bar">
             <ProfilePic />
-            <p id="username">Mario M.</p> 
-            <div class="seperator"></div> 
+            <p id="username"></p> 
+            <div className="seperator"></div> 
             <LeftBarButtons />
-        </>
+        </div>
     );
 }
 
