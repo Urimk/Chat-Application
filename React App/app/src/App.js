@@ -6,18 +6,8 @@ import React, { useState } from "react";
 
 function App({ user, setUser}) {
 
-  //REMOVE
-  const temp = {
-    name: "Default User",
-    picture: "profile_pics/NO_PIC",
-    contacts: []
-  };
 
-
-  //change to //Line and remove 2
-  const [defaultUser, setDefaultUser] = useState(temp);
-  //const [contacts, setContacts] = useState(user.contacts || []);
-  const [contacts, setContacts] = useState(defaultUser.contacts || []);
+  const [contacts, setContacts] = useState(user.contacts || []);
   const [selectedContact, setSelectedContact] = useState(null);
 
 
