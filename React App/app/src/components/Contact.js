@@ -2,30 +2,27 @@ import React, { useRef } from "react";
 import ProfilePic from "./ProfilePic";
 
 
-function Contact({ username, profilePic,  onClick }) {
+function Contact({ contact,  onClick }) {
 
-  const currentTime = new Date().toLocaleString();
   const chatPreviewRef = useRef(null);
 
   const handleClick = () => {
-    onClick(username, profilePic);
-    const chatPreviews = document.getElementsByClassName("chat_preview");
+    onClick(contact);
 
-    for (let i = 0; i < chatPreviews.length; i++) {
-      const chatPreview = chatPreviews[i];
-      if (chatPreview.id === "current_chat") {
-        chatPreview.id = "";
-      }
-    }
+    const chatPreviews = document.querySelectorAll(".chat_preview");
 
-    chatPreviewRef.current.id = "current_chat";
+    chatPreviews.forEach((chatPreview) => {
+      chatPreview.classList.remove("current_chat");
+    });
+
+    chatPreviewRef.current.classList.add("current_chat");
   };
 
   return (
     <div className="chat_preview" ref={chatPreviewRef} onClick={handleClick}>
-        <ProfilePic pic={profilePic} online = { 0 } />
-        <span className="username">{username}</span>
-        <span className="timestamp">{currentTime}</span>
+        <ProfilePic pic={contact.picture} online = { 0 } />
+        <span className="username">{contact.name}</span>
+        <span className="timestamp">{contact.timestamp}</span>
         <span className="msg_preview new_message">You have no messeges with this contact.</span>
     </div>
     );

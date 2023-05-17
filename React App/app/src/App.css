@@ -247,7 +247,7 @@ body {
 .timestamp {
   position: absolute;
   margin-top: 8%;
-  margin-left: 240%;
+  margin-left: 275%;
   font: normal normal 600 9px/20px Poppins;
   color: 707070;
   opacity: 0.4;
@@ -301,7 +301,7 @@ body {
   width: 18%;
 }
 
-#current_chat {
+.current_chat {
   background-color: #EEEEEE;
 }
 

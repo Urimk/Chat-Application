@@ -1,11 +1,11 @@
 import LeftBarButtons from "./LeftBarButtons.js";
 import ProfilePic from "./ProfilePic.js";
 
-function LeftBar() {
+function LeftBar(user) {
     return (
         <div id="side_bar">
-            <ProfilePic pic="profile_pics/NO_PIC.png" online = { 1 }/>
-            <p id="username"></p> 
+            <ProfilePic pic={user.picture} online = { 1 }/>
+            <p id="username">{user.name || "NO_NAME"}</p> 
             <div className="seperator"></div> 
             <LeftBarButtons />
         </div>

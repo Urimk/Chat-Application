@@ -1,34 +1,40 @@
 import React, { useState, useRef, useEffect } from "react";
 import Contact from "./Contact";
 
-function ContactsBar( { onContactSelect }) {
+function ContactsBar({ contacts, onContactSelect, onAddContact }) {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [newContactName, setNewContactName] = useState("");
   const [newProfilePic, setNewProfilePic] = useState("");
-  const [contacts, setContacts] = useState([]);
   const overlayRef = useRef(null);
 
   const handleAddContact = () => {
-
     if (newContactName.trim() === "") {
-        return;
-      }
+      return;
+    }
 
-    setContacts((prevContacts) => [
-      ...prevContacts,
-      { username: newContactName, profilePic: newProfilePic || "profile_pics/NO_PIC.png" },
-    ]);
+    const currentTime = new Date().toLocaleString();
+    const newContact = {
+      name: newContactName,
+      picture: newProfilePic || "profile_pics/NO_PIC.png",
+      messages: [],
+      timestamp: currentTime
+    };
+
+    const updatedContacts = contacts ? [...contacts, newContact] : [newContact];
+
     setNewContactName("");
     setNewProfilePic("");
     setPopupVisible(false);
+    onAddContact(updatedContacts);
   };
 
   const handlePopupToggle = () => {
     setPopupVisible(!isPopupVisible);
   };
 
-  const handleContactClick = (username, profilePic) => {
-    onContactSelect(username, profilePic);
+  const handleContactClick = (clickedContact) => {
+    const selectedContact = contacts.find((contact) => contact.name === clickedContact.name);
+    onContactSelect(selectedContact);
   };
 
   const handleOverlayClick = () => {
@@ -39,14 +45,14 @@ function ContactsBar( { onContactSelect }) {
 
   useEffect(() => {
     if (isPopupVisible) {
-        overlayRef.current.addEventListener("click", handleOverlayClick);
+      overlayRef.current.addEventListener("click", handleOverlayClick);
+    }
+    return () => {
+      if (overlayRef.current) {
+        overlayRef.current.removeEventListener("click", handleOverlayClick);
       }
-      return () => {
-        if (overlayRef.current) {
-          overlayRef.current.removeEventListener("click", handleOverlayClick);
-        }
-      };
-    }, [isPopupVisible]);
+    };
+  }, [isPopupVisible]);
 
   return (
     <div id="chats_bar">
@@ -57,11 +63,16 @@ function ContactsBar( { onContactSelect }) {
         </span>
       </div>
       <div id="chats">
-        {contacts.map((contact, index) => (
-          <Contact key={index} username={contact.username} profilePic={contact.profilePic}
-          onClick={() => handleContactClick(contact.username , contact.profilePic)} />
+        {contacts &&
+         contacts.map((contact, index) => (
+            <Contact
+            key={index}
+            contact={contact}
+            onClick={() => handleContactClick(contact)}
+
+            />
         ))}
-        {/* Render the popup if exsits */}
+        {/* Render the popup if exists */}
         {isPopupVisible && (
           <div>
             <div className="overlay" ref={overlayRef}></div>
@@ -69,11 +80,17 @@ function ContactsBar( { onContactSelect }) {
               <div id="popup_content">
                 <p>Add a new contact</p>
                 <span>Name</span>
-                <input type="text" value={newContactName}
-                 onChange={(e) => setNewContactName(e.target.value)}
+                <input
+                  type="text"
+                  value={newContactName}
+                  onChange={(e) => setNewContactName(e.target.value)}
                 />
-                <button id="cancel_button" onClick={() => setPopupVisible(false)}>Cancel</button>
-                <button id="add_button" onClick={handleAddContact}>Add</button>
+                <button id="cancel_button" onClick={() => setPopupVisible(false)}>
+                  Cancel
+                </button>
+                <button id="add_button" onClick={handleAddContact}>
+                  Add
+                </button>
               </div>
             </div>
           </div>
