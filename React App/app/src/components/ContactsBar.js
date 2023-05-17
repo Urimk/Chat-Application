@@ -7,9 +7,9 @@ function ContactsBar({ contacts, onContactSelect, onAddContact }) {
   const [newProfilePic, setNewProfilePic] = useState("");
   const overlayRef = useRef(null);
 
-  const handleAddContact = () => {
-    if (newContactName.trim() === "") {
-      return;
+    const handleAddContact = () => {
+        if (newContactName.trim() === "") {
+        return;
     }
 
     const currentTime = new Date().toLocaleString();
@@ -36,6 +36,8 @@ function ContactsBar({ contacts, onContactSelect, onAddContact }) {
     const selectedContact = contacts.find((contact) => contact.name === clickedContact.name);
     onContactSelect(selectedContact);
   };
+
+  
 
   const handleOverlayClick = () => {
     if (isPopupVisible) {

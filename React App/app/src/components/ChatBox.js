@@ -1,53 +1,94 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ProfilePic from "./ProfilePic";
 import ChatButtons from "./ChatButtons.js";
-import Message from "./Messege.js";
-import SendMessege from "./SendMessage.js";
+import Message from "./Message.js";
+import SendMessage from "./SendMessage.js";
 
-function ChatBox({ selectedContact, selectedContactPP, contacts, setContacts }) {
-  const [messages, setMessages] = useState([]);
+function ChatBox({ selectedContact, setSelectedContact, updateContactMessages }) {
+  const [contactMessages, setContactMessages] = useState({});
+  const messagesContainerRef = useRef(null);
+  const messages = selectedContact ? contactMessages[selectedContact.name] || [] : [];
 
-  const handleSendMessage = (messageText) => {
-    const newMessage = {
-      text: messageText,
-      time: new Date().toLocaleTimeString(),
-    };
 
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-    if (contacts && contacts.length > 0) {
-      const updatedContact = {
-        ...contacts[0],
-        messages: [...contacts[0].messages, newMessage],
-      };
-
-      setContacts([updatedContact]);
+  useEffect(() => {
+    if (selectedContact) {
+      setContactMessages((prevMessages) => ({
+        ...prevMessages,
+        [selectedContact.name]: prevMessages[selectedContact.name] || selectedContact.messages || [],
+      }));
     }
+  }, [selectedContact]);
+
+
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    container.scrollTop = container.scrollHeight;
+  }, [contactMessages]);
+
+  const formatDateTime = (dateTime) => {
+    const options = {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",   
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: false,
+    };
+    return dateTime.toLocaleString("en-US", options);
   };
 
+  const handleSendMessage = (messageText) => {
+    if (selectedContact) {
+      const newMessage = {
+        text: messageText,
+        time: formatDateTime(new Date()),
+      };
+  
+      const updatedMessages = [
+        ...(contactMessages[selectedContact.name] || []),
+        newMessage,
+      ];
+  
+      const updatedContact = {
+        ...selectedContact,
+        messages: updatedMessages,
+      };
+  
+      setContactMessages((prevMessages) => ({
+        ...prevMessages,
+        [selectedContact.name]: updatedMessages,
+      }));
+  
+      updateContactMessages(selectedContact.name, updatedMessages);
+      setSelectedContact(updatedContact);
+    }
+  };
   return (
     <div id="chat_window">
       {selectedContact && (
         <>
-          <ProfilePic pic={selectedContactPP} online={0} />
-          <span className="username">{selectedContact}</span>
+          <ProfilePic pic={selectedContact.picture} online={0} />
+          <span className="username">{selectedContact.name}</span>
         </>
       )}
       <span id="online_status"></span>
       <ChatButtons />
-      <div id="messages">
-        {messages.map((message, index) => (
-          <Message
+      <div id="messages" ref={messagesContainerRef}>
+      {messages.slice().reverse().map((message, index) => {
+        return (
+            <Message
             key={index}
             text={message.text}
             time={message.time}
             incoming={0}
-          />
-        ))}
+            />
+        );
+        })}
       </div>
-      <SendMessege
+      <SendMessage
         onSendMessage={handleSendMessage}
-        selectedContact={selectedContact}
+        selectedContact={selectedContact ? selectedContact.name : null}
       />
     </div>
   );

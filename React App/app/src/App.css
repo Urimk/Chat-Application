@@ -409,10 +409,23 @@ body {
   border-radius: 2px;
   border-width: 3px;
   max-height: 570px;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
   display: flex;
   flex-direction: column-reverse;
+}
+
+#messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+#messages::-webkit-scrollbar-thumb {
+  background-color: rgba(112, 112, 112, 0.5);
+  border-radius: 3px;
+}
+
+#messages::-webkit-scrollbar-track {
+  background-color: transparent;
 }
 
 .incoming_message {
