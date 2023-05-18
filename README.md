@@ -1,7 +1,7 @@
 # Chat-Application
 CS BIU 2023 2nd Semester Project in Advanced Programing 2:
 
-npm start to run the App.
+npm install once, and then npm start to run the App.
 
 The App contains a register screen to register new users.
 
