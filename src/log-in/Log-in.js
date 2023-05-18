@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import PasswordLog from './password/PasswordLog';
 import UsernameLog from './userName/UsernameLog';
-function LogIn({users,setUsers}) {
+function LogIn({users , setUsers, setUser}) {
     const navigate = useNavigate();
     const [isNameReady, setIsNameReady] = useState(null);
     const [isCorrect, setIsCorrect] = useState(true);
@@ -26,6 +26,8 @@ function LogIn({users,setUsers}) {
           i === index ? { ...user, registered: "yes" } : user
         );
         setUsers(updatedUsers); // Update the users array in the parent component
+        setUser(users[index])
+        console.log(users[index])
         navigate('/chat');
       } else {
         setIsCorrect(false);
@@ -33,16 +35,16 @@ function LogIn({users,setUsers}) {
     }
       
     return (
-        <body>
+        <div>
             {
         //<!--background like sea-->
         }
-        <div class="patterns sea"></div>
+        <div className="patterns sea"></div>
         <form onSubmit={handleSubmit}>
 {
             //<!--the log in screen-->
             }
-            <div class="container-fluid" id="log-screen">
+            <div className="container-fluid" id="log-screen">
                     {
                     //<!--Username lable-->
 }
@@ -61,14 +63,14 @@ function LogIn({users,setUsers}) {
     {
                 //<!--login botton-->
     }
-                <button type="submit" class="btn btn-primary screen-foot" id="login">Login</button>
+                <button type="submit" className="btn btn-primary screen-foot" id="login">Login</button>
                {
                 //<!--link to register-->
                }
-            <span class="screen-foot" id="register">Not registered? <Link to="/">click here</Link> to register</span>
+            <span className="screen-foot" id="register">Not registered? <Link to="/">click here</Link> to register</span>
             </div>
         </form>
-    </body>
+    </div>
     );
   }
   

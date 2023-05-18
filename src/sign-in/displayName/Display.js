@@ -33,8 +33,8 @@ function Display({users,setIsReady,setVal}){
     return(
         <div className="lable">
             <div className="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Display Name</span>
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="basic-addon1">Display Name</span>
                 </div>
                 {isNameExist && (
           <div className="lable alert alert-danger">
@@ -47,7 +47,7 @@ function Display({users,setIsReady,setVal}){
                   checkOtherUserNames();
                   isReady();
                 }}
-                type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1"></input>
+                type="text" className="form-control" aria-label="Username" aria-describedby="basic-addon1"></input>
             </div>
         </div>
         

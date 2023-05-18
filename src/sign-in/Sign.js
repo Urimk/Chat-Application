@@ -25,6 +25,7 @@ function Sign({ users, setUsers }) {
         display: display,
         img: picture,
         registered: "no",
+        contacts: []
       };
       setUsers(prevUsers => [...prevUsers, newUser]); // Add the new user to the existing users array
       navigate('/login'); // Navigate to the LogIn component
@@ -32,7 +33,7 @@ function Sign({ users, setUsers }) {
   }
 
   return (
-    <body>
+    <div>
       <div className="patterns sea"></div>
       <form onSubmit={handleSubmit}>
         <div className="container-fluid" id="sign-screen">
@@ -50,7 +51,7 @@ function Sign({ users, setUsers }) {
           </div>
         </div>
       </form>
-    </body>
+    </div>
   );
 }
 

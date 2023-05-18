@@ -9,9 +9,10 @@ import Chat from './Chat';
 
 function App() {
   const [users, setUsers] = useState([
-    { "userName": "a", "password": "123456", "display": "big A", "img": null, "registered": "no" },
-    { "userName": "b", "password": "123456", "display": "big B", "img": null, "registered": "no" }
+    { "userName": "a", "password": "123456", "display": "big A", "img": null, "registered": "no", "contacts": []},
+    { "userName": "b", "password": "123456", "display": "big B", "img": null, "registered": "no", "contacts": []}
   ]);
+  const [user, setUser] = useState(null);
   return (
     <Router>
       <Routes>
@@ -20,13 +21,13 @@ function App() {
           path="/chat"
           element={
             users.find(user => user.registered === "yes") ? (
-              <Chat />
+              <Chat user={user}/>
             ) : (
               <Navigate to="/login" />
             )
           }
         />
-        <Route path="/login" element={<LogIn users={users} setUsers={setUsers} />} />
+        <Route path="/login" element={<LogIn users={users} setUsers={setUsers} setUser={setUser} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

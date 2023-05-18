@@ -1,10 +1,13 @@
-function ProfilePic() {
+function ProfilePic({ pic, online }) {
+    const noPic = "profile_pics/NO_PIC.png";
+  
     return (
-        <div id="user_profile">
-            <img className="profile_pic" src="public/profile_picutres/mario.png"></img>
-            <div className="online_sign"></div> 
-        </div>
+      <div className="pic_and_status">
+        <img className="profile_pic" src={pic || noPic} />
+        <div className={online ? "online_sign" : "online_sign_off"}></div>
+      </div>
     );
-}
-
-export default ProfilePic;
+  }
+  
+  export default ProfilePic;
+  

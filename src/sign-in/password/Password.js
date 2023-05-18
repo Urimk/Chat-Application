@@ -42,10 +42,10 @@ function Password({ setIsReady, setVal }) {
           The password is shorter than 6 letters and has no upper case or lower case in it
         </div>
       )}
-      <div class="container  lable">
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">
+      <div className="container  lable">
+        <div className="input-group mb-3">
+          <div className="input-group-prepend">
+            <span className="input-group-text" id="basic-addon1">
               Password
             </span>
           </div>
@@ -55,7 +55,7 @@ function Password({ setIsReady, setVal }) {
               checkCorrect();
             }}
             type="password"
-            class="form-control"
+            className="form-control"
             aria-label="password"
             aria-describedby="basic-addon1"
           ></input>
@@ -66,10 +66,10 @@ function Password({ setIsReady, setVal }) {
           The verification has no match
         </div>
       )}
-      <div class="container  lable">
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">
+      <div className="container  lable">
+        <div className="input-group mb-3">
+          <div className="input-group-prepend">
+            <span className="input-group-text" id="basic-addon1">
               Password Verification
             </span>
           </div>
@@ -79,7 +79,7 @@ function Password({ setIsReady, setVal }) {
               checkValid();
             }}
             type="password"
-            class="form-control"
+            className="form-control"
             aria-label="password"
             aria-describedby="basic-addon1"
           ></input>

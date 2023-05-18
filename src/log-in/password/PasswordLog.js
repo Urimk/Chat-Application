@@ -11,10 +11,10 @@ function PasswordLog({ name,setIsReady, setVal, users }) {
 
   return (
     <>
-      <div class="container  lable">
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">
+      <div className="container  lable">
+        <div className="input-group mb-3">
+          <div className="input-group-prepend">
+            <span className="input-group-text" id="basic-addon1">
               Password
             </span>
           </div>
@@ -24,7 +24,7 @@ function PasswordLog({ name,setIsReady, setVal, users }) {
               setPass();
             }}
             type="password"
-            class="form-control"
+            className="form-control"
             aria-label="password"
             aria-describedby="basic-addon1"
           ></input>
