@@ -1,32 +1,45 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
-function Password() {
+function Password({ setIsReady, setVal }) {
   const pass1Ref = useRef(null);
   const pass2Ref = useRef(null);
-  const [isValid, setIsValid] = useState(true);
-  const [isLong, setIsLong] = useState(true);
+  const [isMatch, setIsMatch] = useState(true);
+  const [isCorrect, setIsCorrect] = useState(true);
 
   //check that the password is longer than 5 letters
-  const checkLength = () => {
+  const checkCorrect = () => {
     const pass1 = pass1Ref.current.value;
-    const isLong = pass1.length > 6;
-    setIsLong(isLong);
+    const isCorrect = pass1.length > 6;
+    const hasUppercase = /[A-Z]/.test(pass1);
+    const hasLowercase = /[a-z]/.test(pass1);
+    setIsCorrect(isCorrect && hasUppercase && hasLowercase);
   };
-
 
   //check that the password validation is equal to the original password
   const checkValid = () => {
     const pass1 = pass1Ref.current.value;
     const pass2 = pass2Ref.current.value;
-    const isValid = pass1 === pass2;
-    setIsValid(isValid);
+    const result = pass1 === pass2;
+    setIsMatch(result);
   };
+
+  //check if ready to submit
+  useEffect(() => {
+    let pass1 = pass1Ref.current.value;
+    let pass2 = pass2Ref.current.value;
+    if (isMatch && isCorrect && pass1 != '' && pass2 != '') {
+      setIsReady(true);
+      setVal(pass1);
+    } else {
+      setIsReady(false);
+    }
+  }, [isMatch, isCorrect, setIsReady, setVal]);
 
   return (
     <>
-    {!isLong && (
+      {!isCorrect && (
         <div className="lable alert alert-danger">
-          The password is shorter than 6 letters
+          The password is shorter than 6 letters and has no upper case or lower case in it
         </div>
       )}
       <div class="container  lable">
@@ -39,8 +52,8 @@ function Password() {
           <input
             ref={pass1Ref}
             onKeyUp={() => {
-                checkLength();
-              }}
+              checkCorrect();
+            }}
             type="password"
             class="form-control"
             aria-label="password"
@@ -48,9 +61,9 @@ function Password() {
           ></input>
         </div>
       </div>
-      {isLong && !isValid && (
+      {isCorrect && !isMatch && (
         <div className="lable alert alert-danger">
-          The verification have no match
+          The verification has no match
         </div>
       )}
       <div class="container  lable">
@@ -77,4 +90,5 @@ function Password() {
 }
 
 export default Password;
+
  

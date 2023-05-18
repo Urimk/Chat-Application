@@ -1,7 +1,14 @@
-
-
-#log-screen{
-  height: 72%;
+#sign-screen {
+  display: flex;
+  flex-wrap: wrap; /* Add this property to allow elements to wrap */
+  justify-content: center; /* Horizontally center elements */
+  align-items: center; /* Vertically center elements */
+  background-color: rgb(175, 168, 168);
+  position: absolute;
+  width: 50%;
+  height: 80%;
+  right: 25%;
+  top: 10%;
 }
 
 .input-container {
@@ -22,7 +29,10 @@
 }
 
 #img-place{
-  width: 20%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 20%;
 }
 
 .screen-foot{
@@ -41,7 +51,7 @@
   background-color: rgb(175, 168, 168);
   position: absolute;
   width: 50%;
-  height: 95%;
+  height: 45%;
   right: 25%;
   top: 10%;
 }

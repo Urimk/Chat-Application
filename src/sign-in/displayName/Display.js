@@ -1,17 +1,16 @@
 import { useRef, useState } from "react";
-import users from "../UserDataBase.json"
 
-function Display(){
+function Display({users,setIsReady,setVal}){
     const [isNameExist, setIsNameExist] = useState(false);
     const nameRef = useRef(null);
 
      //check the no other user uses this username
   const checkOtherUserNames = () => {
-    const currentUsers = users.users;
+    const len = users.length;
     const inputName = nameRef.current.value;
-    if (currentUsers.length !== 0) {
-      for (let i = 0; i < currentUsers.length; i++) {
-        if (currentUsers[i].display === inputName) {
+    if (len !== 0) {
+      for (let i = 0; i < len; i++) {
+        if (users[i].display === inputName) {
           setIsNameExist(true);
           return;
         }
@@ -20,6 +19,17 @@ function Display(){
   
     setIsNameExist(false);
   };
+
+  //check if ready to submit
+  function isReady(){
+    if(!isNameExist){
+      setIsReady(true);
+      setVal(nameRef.current.value);
+    }else{
+      setIsReady(false);
+    }
+  }
+
     return(
         <div className="lable">
             <div className="input-group mb-3">
@@ -35,6 +45,7 @@ function Display(){
                 ref={nameRef}
                 onKeyUp={() => {
                   checkOtherUserNames();
+                  isReady();
                 }}
                 type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1"></input>
             </div>

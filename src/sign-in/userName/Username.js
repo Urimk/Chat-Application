@@ -1,32 +1,19 @@
-import { useRef, useState } from "react";
-import users from "../UserDataBase.json"
+import { useEffect, useRef, useState } from "react";
 
 //the final bottom
-function Username() {
+function Username({users,setIsReady,setVal}) {
   //get the input
   const nameRef = useRef(null);
-  //booleans objects, one for vildetion and one to search in other users
-  const [isValid, setIsValid] = useState(true);
+  //booleans object, to search in other users
   const [isNameExist, setIsNameExist] = useState(false);
-
-  //check that the name is longer than 7 and contains numbers, uper case and lower case
-  const checkValid = () => {
-    const name = nameRef.current.value;
-    const hasUpperCase = /[A-Z]/.test(name);
-    const hasLowerCase = /[a-z]/.test(name);
-    const hasNumber = /[0-9]/.test(name);
-    const isLongEnough = name.length >= 8;
-    const isValid = hasUpperCase && hasLowerCase && hasNumber && isLongEnough;
-    setIsValid(isValid);
-  };
 
   //check the no other user uses this username
   const checkOtherUserNames = () => {
-    const currentUsers = users.users;
     const inputName = nameRef.current.value;
-    if (currentUsers.length !== 0) {
-      for (let i = 0; i < currentUsers.length; i++) {
-        if (currentUsers[i].userName === inputName) {
+    let len = users.length;
+    if (len !== 0) {
+      for (let i = 0; i < len; i++) {
+        if (users[i].userName === inputName) {
           setIsNameExist(true);
           return;
         }
@@ -35,12 +22,24 @@ function Username() {
   
     setIsNameExist(false);
   };
+
+  //check if ready to submit
+  const isReady = () => {
+    const name = nameRef.current.value
+    if(!isNameExist && name != ''){
+      setIsReady(true);
+      setVal(name);
+    }else{
+      setIsReady(false);
+    }
+
+  }
   
 
 
   return (
     <>
-      <div className="label">
+      <div className="lable">
         <div className="input-group mb-3">
           <div className="input-group-prepend">
             <span className="input-group-text" id="basic-addon1">
@@ -50,8 +49,8 @@ function Username() {
           <input
             ref={nameRef}
             onKeyUp={() => {
-              checkValid();
               checkOtherUserNames();
+              isReady();
             }}
             type="text"
             className="form-control"
@@ -59,12 +58,7 @@ function Username() {
             aria-describedby="basic-addon1"
           />
         </div>
-        {!isValid && (
-          <div className="lable alert alert-danger">
-            The username must be 8 letters long or above and must contain one upper case letter and one lower case letter
-          </div>
-        )}
-        {isValid && isNameExist && (
+        {isNameExist && (
           <div className="lable alert alert-danger">
             This username already exists, please pick another one
           </div>
@@ -74,4 +68,4 @@ function Username() {
   );
 }
 
-export { Username };
+export default Username;
