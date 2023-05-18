@@ -1,13 +1,14 @@
 import LeftBarButtons from "./LeftBarButtons.js";
 import ProfilePic from "./ProfilePic.js";
 
-function LeftBar() {
+function LeftBar({ user, handleLogOut }) {
+
     return (
         <div id="side_bar">
-            <ProfilePic />
-            <p id="username"></p> 
+            <ProfilePic pic={user.img} online = { 1 }/>
+            <p id="username">{user.username || "NO_NAME"}</p> 
             <div className="seperator"></div> 
-            <LeftBarButtons />
+            <LeftBarButtons handleLogOut={handleLogOut}/>
         </div>
     );
 }
