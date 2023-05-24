@@ -16,7 +16,28 @@
     <title>React App</title>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script>
+        async function temp() {
+          const data = {
+            "id": 1,
+            "user": {
+              "username": "bbbb",
+              "displayName": "BBBB",
+              "profilePic": "string"
+            },
+            "lastMessage": null
+          }
+
+          const res = await fetch('http://localhost:5000/api/Chats', {
+            'method': 'get',
+            'headers': {
+              'Content-Type': 'application/json',
+            },
+            'body': JSON.stringify(data)
+          })
+        }
+
+    </script>
     <div id="root"></div>
     <!--
       This HTML file is a template.

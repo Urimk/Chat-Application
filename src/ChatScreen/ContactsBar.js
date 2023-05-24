@@ -1,40 +1,46 @@
 import React, { useState, useRef, useEffect } from "react";
 import Contact from "./Contact";
 
-function ContactsBar({ contacts, onContactSelect, onAddContact }) {
+function ContactsBar({users, curUser, onChatSelect, onAddChat }) {
   const [isPopupVisible, setPopupVisible] = useState(false);
-  const [newContactName, setNewContactName] = useState("");
-  const [newProfilePic, setNewProfilePic] = useState("");
   const overlayRef = useRef(null);
 
-    const handleAddContact = () => {
-        if (newContactName.trim() === "") {
-        return;
+  const handleAddChat = () => {
+    let chatIdCounter = 1;
+
+    if (newContactName.trim() === "") {
+      return;
+    }
+
+    const existingUser = users.find((user) => user.username === newContactName);
+    if (!existingUser) {
+      return;
     }
 
     const currentTime = new Date().toLocaleString();
-    const newContact = {
-      name: newContactName,
-      picture: newProfilePic || "profile_pics/NO_PIC.png",
-      messages: [],
-      timestamp: currentTime
+
+    const newChat = {
+      id: chatIdCounter++,
+      user: {
+        "username": newContactName,
+        "displayName": existingUser.displayName,
+        "profilePic": existingUser.profilePic
+      },
+      lastMessage: null
+
     };
 
-    const updatedContacts = contacts ? [...contacts, newContact] : [newContact];
-
-    setNewContactName("");
-    setNewProfilePic("");
     setPopupVisible(false);
-    onAddContact(updatedContacts);
+    onAddChat(newChat);
   };
 
   const handlePopupToggle = () => {
     setPopupVisible(!isPopupVisible);
   };
 
-  const handleContactClick = (clickedContact) => {
-    const selectedContact = contacts.find((contact) => contact.name === clickedContact.name);
-    onContactSelect(selectedContact);
+  const handleChatClick = (clickedChat) => {
+    const selectedChat = chats.find((chat) => chat.id === clickedChat.id);
+    onChatSelect(selectedChat);
   };
 
   
@@ -65,12 +71,12 @@ function ContactsBar({ contacts, onContactSelect, onAddContact }) {
         </span>
       </div>
       <div id="chats">
-        {contacts &&
-         contacts.map((contact, index) => (
+        {chats &&
+         chats.map((chat) => (
             <Contact
-            key={index}
-            contact={contact}
-            onClick={() => handleContactClick(contact)}
+            key={chat.id}
+            chat={chat}
+            onClick={() => handleChatClick(chat)}
 
             />
         ))}
@@ -90,7 +96,7 @@ function ContactsBar({ contacts, onContactSelect, onAddContact }) {
                 <button id="cancel_button" onClick={() => setPopupVisible(false)}>
                   Cancel
                 </button>
-                <button id="add_button" onClick={handleAddContact}>
+                <button id="add_button" onClick={handleAddChat}>
                   Add
                 </button>
               </div>

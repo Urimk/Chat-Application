@@ -5,9 +5,9 @@ import ChatBox from './ChatScreen/ChatBox.js';
 import React, { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 
-function Chat({ user }) {
+function Chat({ users, curUser }) {
 
-  const [contacts, setContacts] = useState(user.contacts || []);
+  const [chats, setChats] = useState(curUser.chat || []);
   const [selectedContact, setselectedContact] = useState(null);
   const navigate = useNavigate();
 
@@ -15,12 +15,12 @@ function Chat({ user }) {
     setselectedContact(contact);
   };
 
-  const handleAddContact = (updatedContacts) => {
-    setContacts(updatedContacts);
+  const handleAddChat = (newChat) => {
+    setChats((prevChats) => [...prevChats, newChat]);
   };
 
   const updateContactMessages = (contactName, updatedMessages) => {
-    setContacts((prevContacts) =>
+    setChats((prevContacts) =>
       prevContacts.map((contact) => {
         if (contact.name === contactName) {
           return {
@@ -42,8 +42,8 @@ function Chat({ user }) {
   return (
     <>
       <div id="background"></div>
-      <LeftBar user={user} handleLogOut={handleLogOut}/>
-      <ContactsBar contacts={contacts} onContactSelect={handleContactSelect} onAddContact={handleAddContact} />
+      <LeftBar user={curUser} handleLogOut={handleLogOut}/>
+      <ContactsBar users={users} contacts={contacts} onContactSelect={handleContactSelect} onAddChat={handleAddChat} />
       <ChatBox selectedContact={selectedContact} setselectedContact={setselectedContact} 
                updateContactMessages={updateContactMessages}/>
     </>
