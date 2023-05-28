@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import Contact from "./Contact";
 
-function ContactsBar({users, onChatSelect, onAddChat }) {
+function ContactsBar({users, user, chats, onChatSelect, onAddChat }) {
   const [isPopupVisible, setPopupVisible] = useState(false);
+  const [newContactName, setNewContactName] = useState("");
+  const [newContact, setNewContact] = useState(null);
   const overlayRef = useRef(null);
 
   const handleAddChat = () => {
@@ -13,21 +15,32 @@ function ContactsBar({users, onChatSelect, onAddChat }) {
     }
 
     const existingUser = users.find((user) => user.username === newContactName);
+    console.log(user);
+    console.log(newContactName);
     if (!existingUser) {
       return;
     }
+    setNewContact(existingUser);
 
     const currentTime = new Date().toLocaleString();
-
+    
     const newChat = {
       id: chatIdCounter++,
-      user: {
+      users: [
+      {
+        "username": user.username,
+        "displayName": user.displayName,
+        "profilePic": user.profilePic
+      },
+      {
         "username": newContactName,
         "displayName": existingUser.displayName,
         "profilePic": existingUser.profilePic
-      },
-      lastMessage: null
-
+      }
+    ],
+      lastMessage: null,
+      created: currentTime,
+      messages: []
     };
 
     setPopupVisible(false);
@@ -61,7 +74,7 @@ function ContactsBar({users, onChatSelect, onAddChat }) {
       }
     };
   }, [isPopupVisible]);
-
+  
   return (
     <div id="chats_bar">
       <div id="chat_bar_line1">
@@ -76,6 +89,7 @@ function ContactsBar({users, onChatSelect, onAddChat }) {
             <Contact
             key={chat.id}
             chat={chat}
+            user={newContact}
             onClick={() => handleChatClick(chat)}
 
             />

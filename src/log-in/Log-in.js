@@ -16,7 +16,7 @@ function LogIn({users , setUsers, setUser}) {
       let find = false;
       // Check if the username and password match
       for (; index < users.length; index++) {
-        if (users[index].userName === name && users[index].password === password) {
+        if (users[index].username === name && users[index].password === password) {
           find = true;
           break;
         }
@@ -34,6 +34,8 @@ function LogIn({users , setUsers, setUser}) {
       }
     }
       
+
+    console.log(users)
     return (
         <div>
             {

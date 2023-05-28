@@ -24,8 +24,10 @@ function ChatBox({chat, selectedContact, setChat, updateChatMessages }) {
 
   useEffect(() => {
     const container = messagesContainerRef.current;
-    container.scrollTop = container.scrollHeight;
-  }, [chat.messages]);
+    if (container && chat) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [chat]);
 
   const formatDateTime = (dateTime) => {
     const options = {

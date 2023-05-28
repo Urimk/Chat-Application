@@ -8,12 +8,12 @@ import { Link, useNavigate } from 'react-router-dom';
 function Chat({ users, curUser }) {
 
   const [curChat, setCurChat] = useState(null);
-  const [chats, setChats] = useState(curUser.chat || []);
+  const [chats, setChats] = useState([]);
   const [selectedContact, setselectedContact] = useState(null);
   const navigate = useNavigate();
 
   const handleContactSelect = (contact) => {
-    findChat(chats, contact)
+    findChat(chats, contact.username)
     setselectedContact(contact);
   };
 
@@ -35,12 +35,20 @@ function Chat({ users, curUser }) {
     );
   };
 
+
   function findChat(chats, otherUser) {
     for (const chat of chats) {
-      const user = chat.user;
+      let user = chat.users[0];
   
       if (user.username === otherUser) {
         setCurChat(chat);
+        return;
+      }
+      user = chat.users[1];
+  
+      if (user.username === otherUser) {
+        setCurChat(chat);
+        return;
       }
     }
   }
@@ -55,9 +63,10 @@ function Chat({ users, curUser }) {
     <>
       <div id="background"></div>
       <LeftBar user={curUser} handleLogOut={handleLogOut}/>
-      <ContactsBar users={users} contacts={contacts} onContactSelect={handleContactSelect} onAddChat={handleAddChat} />
+      <ContactsBar users={users} user={curUser} chats={chats} 
+                   onContactSelect={handleContactSelect} onAddChat={handleAddChat} />
       <ChatBox chat={curChat} selectedContact={selectedContact} setChat={setCurChat} 
-               updateContactMessages={updateChatMessages}/>
+               updateChatMessages={updateChatMessages}/>
     </>
   );
 }

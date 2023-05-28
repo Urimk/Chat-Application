@@ -9,8 +9,8 @@ import Chat from './Chat';
 
 function App() {
   const [users, setUsers] = useState([
-    { "userName": "a", "password": "123456", "display": "big A", "img": null, "registered": "no", "contacts": []},
-    { "userName": "b", "password": "123456", "display": "big B", "img": null, "registered": "no", "contacts": []}
+    { "username": "a", "password": "123456", "displayName": "big A", "ProfilePic": null, "registered": "no", "chats": []},
+    { "username": "b", "password": "123456", "displayName": "big B", "ProfilePic": null, "registered": "no", "chats": []}
   ]);
   const [user, setUser] = useState(null);
   return (
@@ -21,7 +21,7 @@ function App() {
           path="/chat"
           element={
             users.find(user => user.registered === "yes") ? (
-              <Chat users={users} user={user}/>
+              <Chat users={users} curUser={user}/>
             ) : (
               <Navigate to="/login" />
             )
