@@ -7,11 +7,13 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function Chat({ users, curUser }) {
 
+  const [curChat, setCurChat] = useState(null);
   const [chats, setChats] = useState(curUser.chat || []);
   const [selectedContact, setselectedContact] = useState(null);
   const navigate = useNavigate();
 
   const handleContactSelect = (contact) => {
+    findChat(chats, contact)
     setselectedContact(contact);
   };
 
@@ -19,19 +21,29 @@ function Chat({ users, curUser }) {
     setChats((prevChats) => [...prevChats, newChat]);
   };
 
-  const updateContactMessages = (contactName, updatedMessages) => {
-    setChats((prevContacts) =>
-      prevContacts.map((contact) => {
-        if (contact.name === contactName) {
+  const updateChatMessages = (chatId, updatedMessages) => {
+    setChats((prevChats) =>
+    prevChats.map((chat) => {
+        if (chat.id === chatId) {
           return {
-            ...contact,
+            ...chat,
             messages: updatedMessages,
           };
         }
-        return contact;
+        return chat;
       })
     );
   };
+
+  function findChat(chats, otherUser) {
+    for (const chat of chats) {
+      const user = chat.user;
+  
+      if (user.username === otherUser) {
+        setCurChat(chat);
+      }
+    }
+  }
 
   function handleLogOut(event) {
     event.preventDefault();
@@ -44,8 +56,8 @@ function Chat({ users, curUser }) {
       <div id="background"></div>
       <LeftBar user={curUser} handleLogOut={handleLogOut}/>
       <ContactsBar users={users} contacts={contacts} onContactSelect={handleContactSelect} onAddChat={handleAddChat} />
-      <ChatBox selectedContact={selectedContact} setselectedContact={setselectedContact} 
-               updateContactMessages={updateContactMessages}/>
+      <ChatBox chat={curChat} selectedContact={selectedContact} setChat={setCurChat} 
+               updateContactMessages={updateChatMessages}/>
     </>
   );
 }

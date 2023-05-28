@@ -21,7 +21,7 @@ function App() {
           path="/chat"
           element={
             users.find(user => user.registered === "yes") ? (
-              <Chat user={user}/>
+              <Chat users={users} user={user}/>
             ) : (
               <Navigate to="/login" />
             )

@@ -20,12 +20,11 @@ function Sign({ users, setUsers }) {
     if (isNameReady && isPasswordReady && isDisplayReady) {
       event.preventDefault();
       const newUser = {
-        userName: name,
+        username: name,
         password: password,
-        display: display,
-        img: picture,
+        displayName: display,
+        ProfilePic: picture,
         registered: "no",
-        contacts: []
       };
       setUsers(prevUsers => [...prevUsers, newUser]); // Add the new user to the existing users array
       navigate('/login'); // Navigate to the LogIn component
