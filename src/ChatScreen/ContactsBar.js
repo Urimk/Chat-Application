@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Contact from "./Contact";
 
-function ContactsBar({users, curUser, onChatSelect, onAddChat }) {
+function ContactsBar({users, onChatSelect, onAddChat }) {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const overlayRef = useRef(null);
 
