@@ -5,8 +5,8 @@ import ProfilePic from "./ProfilePic";
 function Contact({ chat, user, onClick }) {
     const chatPreviewRef = useRef(null);
 
-    const otherUser = chat.users[0].id === user.id ? chat.users[1] : chat.users[0];
-  
+    const otherUser = chat.users[0].username === user.username ? chat.users[1] : chat.users[0];
+
     const handleClick = () => {
       onClick(chat);
   

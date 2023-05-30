@@ -4,7 +4,7 @@ import ChatButtons from "./ChatButtons.js";
 import Message from "./Message.js";
 import SendMessage from "./SendMessage.js";
 
-function ChatBox({chat, selectedContact, setChat, updateChatMessages }) {
+function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, msgIdCounter }) {
   const [chatMessages, setChatMessages] = useState({});
   const messagesContainerRef = useRef(null);
   const messages = chat ? chat.messages || [] : [];
@@ -13,8 +13,8 @@ function ChatBox({chat, selectedContact, setChat, updateChatMessages }) {
     if (chat) {
       setChatMessages((prevMessages) => ({
         ...prevMessages,
-        [chat.id]: {
-          messages: chat.messages || [],
+        [chat]: {
+          messages: chatMessages || [],
         },
       }));
     }
@@ -45,8 +45,10 @@ function ChatBox({chat, selectedContact, setChat, updateChatMessages }) {
   const handleSendMessage = (messageText) => {
     if (chat) {
       const newMessage = {
-        text: messageText,
+        id: msgIdCounter.current++,
+        content: messageText,
         time: formatDateTime(new Date()),
+        sender: user
       };
   
       const updatedMessages = [
@@ -57,35 +59,42 @@ function ChatBox({chat, selectedContact, setChat, updateChatMessages }) {
       const updatedChat = {
         ...chat,
         messages: updatedMessages,
+        lastMessage: messageText
       };
+
+      console.log(updatedMessages);
+      console.log(updatedChat);
   
       setChatMessages((prevMessages) => ({
         ...prevMessages,
-        [chat.id]: {
+        [chat]: {
           messages: updatedMessages,
+          lastMessage: messageText
         },
       }));
       updateChatMessages(chat.id, updatedMessages);
       setChat(updatedChat);
     }
   };
+
   return (
     <div id="chat_window">
       {selectedContact && (
         <>
-          <ProfilePic pic={selectedContact.ProfilePic}/>
+          <ProfilePic pic={selectedContact.profilePic}/>
           <span className="username">{selectedContact.displayName}</span>
         </>
       )}
       <ChatButtons />
       <div id="messages" ref={messagesContainerRef}>
       {messages.slice().reverse().map((message, index) => {
+        const incoming = message.sender.username === user.username ? 0 : 1;
         return (
             <Message
             key={index}
-            text={message.text}
+            text={message.content}
             time={message.time}
-            incoming={0}
+            incoming={incoming}
             />
         );
         })}
