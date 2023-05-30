@@ -15,8 +15,7 @@ function ContactsBar({users, user, chats, onChatSelect, onAddChat }) {
     }
 
     const existingUser = users.find((user) => user.username === newContactName);
-    console.log(user);
-    console.log(newContactName);
+
     if (!existingUser) {
       return;
     }
@@ -24,6 +23,7 @@ function ContactsBar({users, user, chats, onChatSelect, onAddChat }) {
 
     const currentTime = new Date().toLocaleString();
     
+    console.log(existingUser.profilePic, "A");
     const newChat = {
       id: chatIdCounter++,
       users: [
@@ -42,6 +42,7 @@ function ContactsBar({users, user, chats, onChatSelect, onAddChat }) {
       created: currentTime,
       messages: []
     };
+    console.log(newChat.users[0].profilePic, "B");
 
     setPopupVisible(false);
     onAddChat(newChat);
@@ -89,7 +90,7 @@ function ContactsBar({users, user, chats, onChatSelect, onAddChat }) {
             <Contact
             key={chat.id}
             chat={chat}
-            user={newContact}
+            user={user}
             onClick={() => handleChatClick(chat)}
 
             />

@@ -23,7 +23,7 @@ function Sign({ users, setUsers }) {
         username: name,
         password: password,
         displayName: display,
-        ProfilePic: picture,
+        profilePic: picture,
         registered: "no",
       };
       setUsers(prevUsers => [...prevUsers, newUser]); // Add the new user to the existing users array

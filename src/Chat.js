@@ -58,13 +58,12 @@ function Chat({ users, curUser }) {
     navigate('/login');
   }
 
-  console.log(handleLogOut, "2");
   return (
     <>
       <div id="background"></div>
       <LeftBar user={curUser} handleLogOut={handleLogOut}/>
       <ContactsBar users={users} user={curUser} chats={chats} 
-                   onContactSelect={handleContactSelect} onAddChat={handleAddChat} />
+                   onChatSelect={handleContactSelect} onAddChat={handleAddChat} />
       <ChatBox chat={curChat} selectedContact={selectedContact} setChat={setCurChat} 
                updateChatMessages={updateChatMessages}/>
     </>

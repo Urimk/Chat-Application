@@ -5,7 +5,7 @@ function LeftBar({ user, handleLogOut }) {
 
     return (
         <div id="side_bar">
-            <ProfilePic pic={user.ProfilePic} online = { 1 }/>
+            <ProfilePic pic={user.profilePic} online = { 1 }/>
             <p id="username">{user.displayName || "NO_NAME"}</p> 
             <div className="seperator"></div> 
             <LeftBarButtons handleLogOut={handleLogOut}/>

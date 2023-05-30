@@ -27,15 +27,13 @@ function LogIn({users , setUsers, setUser}) {
         );
         setUsers(updatedUsers); // Update the users array in the parent component
         setUser(users[index])
-        console.log(users[index])
+
         navigate('/chat');
       } else {
         setIsCorrect(false);
       }
     }
       
-
-    console.log(users)
     return (
         <div>
             {
