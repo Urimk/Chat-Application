@@ -9,37 +9,53 @@ function Sign({ users, setUsers }) {
   const navigate = useNavigate();
   const [isNameReady, setIsNameReady] = useState(null);
   const [isPasswordReady, setIsPasswordReady] = useState(null);
-  const [isDisplayReady, setIsDisplayReady] = useState(null);
 
   const [name, setName] = useState(null);
   const [password, setPassword] = useState(null);
   const [display, setDisplay] = useState(null);
   const [picture, setPicture] = useState(null);
 
-  function handleSubmit(event) {
-    if (isNameReady && isPasswordReady && isDisplayReady) {
-      event.preventDefault();
+  async function handleSubmit(event) {
+    if (isNameReady && isPasswordReady) {
+      try{
+        event.preventDefault();
       const newUser = {
-        userName: name,
-        password: password,
-        display: display,
-        img: picture,
-        registered: "no",
-        contacts: []
+        "userName": name,
+        "password": password,
+        "displayName": display,
+        "profilePic": picture,
+        "registered": "no",
+        "contacts": []
       };
-      setUsers(prevUsers => [...prevUsers, newUser]); // Add the new user to the existing users array
-      navigate('/login'); // Navigate to the LogIn component
+      const res = await fetch('http://localhost:5000/api/Users', {
+method: 'post', // send a post request
+headers: {
+'Content-Type': 'application/json', // the data (username/password) is in the form of a JSON object
+},
+'body': JSON.stringify(newUser) // The actual data (username/password)
+});
+if (res.status != 200){
+  if(res.status == 409){
+    alert('This username is already exist in our system, please pick another one')
+  }
+}else {
+  navigate('/login'); // Navigate to the LogIn component
+}
+
+      }catch(error){
+        console.error('An error occurred:', error);
+      } 
     }
   }
 
   return (
     <div>
       <div className="patterns sea"></div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} >
         <div className="container-fluid" id="sign-screen">
-          <Username users={users} setIsReady={setIsNameReady} setVal={setName} />
+          <Username setIsReady={setIsNameReady} setVal={setName} />
           <Password setIsReady={setIsPasswordReady} setVal={setPassword} />
-          <Display users={users} setIsReady={setIsDisplayReady} setVal={setDisplay} />
+          <Display setVal={setDisplay} />
           <Image setVal={setPicture} />
           <div>
             <button type="submit" className="btn btn-primary screen-foot" id="login">

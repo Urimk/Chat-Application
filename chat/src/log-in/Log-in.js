@@ -4,35 +4,50 @@ import PasswordLog from './password/PasswordLog';
 import UsernameLog from './userName/UsernameLog';
 function LogIn({users , setUsers, setUser}) {
     const navigate = useNavigate();
-    const [isNameReady, setIsNameReady] = useState(null);
     const [isCorrect, setIsCorrect] = useState(true);
-    const [isPasswordReady, setIsPasswordReady] = useState(null);
     const [name, setName] = useState(null);
     const [password, setPassword] = useState(null);
 
     function handleSubmit(event) {
       event.preventDefault();
-      let index = 0;
-      let find = false;
-      // Check if the username and password match
-      for (; index < users.length; index++) {
-        if (users[index].userName === name && users[index].password === password) {
-          find = true;
-          break;
+      const userDetiles = {
+        "userName": name,
+        "password": password,
+      };
+      const res = await fetch('http://localhost:5000/api/Tokens', {
+        'method': 'post', // send a post request
+        'headers': {
+        'Content-Type': 'application/json', // the data (username/password) is in the form of a JSON object
+        },
+        'body': JSON.stringify(userDetiles) // The actual data (username/password)
         }
-      }
+        )
+        // The server's response is a json object
+        const json = await res.json()
+        if (res.status != 200)
+        setIsCorrect(false);
+        else {
+        // Correct username/password
+        // Take the token the server sent us
+        // and make *another* request to the homepage
+        // but attach the token to the request
+        const res = await fetch('http://localhost:89/', {
+        'headers': {
+        'Content-Type': 'application/json',
+        'authorization': 'bearer ' + json.token // attach the token
+        },
+      // Check if the username and password match
       if (find) {
         const updatedUsers = users.map((user, i) =>
           i === index ? { ...user, registered: "yes" } : user
         );
         setUsers(updatedUsers); // Update the users array in the parent component
         setUser(users[index])
-        console.log(users[index])
         navigate('/chat');
-      } else {
-        setIsCorrect(false);
       }
     }
+  }
+}
       
     return (
         <div>
@@ -48,11 +63,11 @@ function LogIn({users , setUsers, setUser}) {
                     {
                     //<!--Username lable-->
 }
-                <UsernameLog users={users} setIsReady={setIsNameReady} setVal={setName} />
+                <UsernameLog setVal={setName} />
     {
                 //<!--password lable-->
     }
-                <PasswordLog name={name} setIsReady={setIsPasswordReady} setVal={setPassword} users={users} />
+                <PasswordLog setVal={setPassword}/>
                 {
                     !isCorrect &&(
                         <div className="lable alert alert-danger">
