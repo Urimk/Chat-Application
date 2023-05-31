@@ -1,32 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
 //the final bottom
-function Username({users,setIsReady,setVal}) {
+function Username({setIsReady,setVal}) {
   //get the input
   const nameRef = useRef(null);
-  //booleans object, to search in other users
-  const [isNameExist, setIsNameExist] = useState(false);
-
-  //check the no other user uses this username
-  const checkOtherUserNames = () => {
-    const inputName = nameRef.current.value;
-    let len = users.length;
-    if (len !== 0) {
-      for (let i = 0; i < len; i++) {
-        if (users[i].userName === inputName) {
-          setIsNameExist(true);
-          return;
-        }
-      }
-    }
-  
-    setIsNameExist(false);
-  };
 
   //check if ready to submit
-  const isReady = () => {
+  const setUser = () => {
     const name = nameRef.current.value
-    if(!isNameExist && name != ''){
+    if( name != ''){
       setIsReady(true);
       setVal(name);
     }else{
@@ -49,8 +31,7 @@ function Username({users,setIsReady,setVal}) {
           <input
             ref={nameRef}
             onKeyUp={() => {
-              checkOtherUserNames();
-              isReady();
+              setUser();
             }}
             type="text"
             className="form-control"
@@ -58,11 +39,6 @@ function Username({users,setIsReady,setVal}) {
             aria-describedby="basic-addon1"
           />
         </div>
-        {isNameExist && (
-          <div className="lable alert alert-danger">
-            This username already exists, please pick another one
-          </div>
-        )}
       </div>
     </>
   );

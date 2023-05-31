@@ -5,6 +5,7 @@ import ChatBox from './ChatScreen/ChatBox.js';
 import React, { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 
+
 function Chat({ users, curUser, chats, setChats, msgIdCounter, chatIdCounter}) {
 
   const [curChat, setCurChat] = useState(null);
@@ -38,7 +39,6 @@ function Chat({ users, curUser, chats, setChats, msgIdCounter, chatIdCounter}) {
     event.preventDefault();
     navigate('/login');
   }
-
   return (
     <>
       <div id="background"></div>

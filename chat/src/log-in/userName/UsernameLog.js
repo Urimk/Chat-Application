@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 //the final bottom
-function UsernameLog({users,setIsReady,setVal}) {
+function UsernameLog({setVal}) {
 
   const nameRef = useRef(null);
   function setName(){

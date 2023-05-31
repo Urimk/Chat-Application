@@ -2,35 +2,45 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import PasswordLog from './password/PasswordLog';
 import UsernameLog from './userName/UsernameLog';
-function LogIn({users , setUsers, setUser}) {
+
+function LogIn({setUser}) {
     const navigate = useNavigate();
-    const [isNameReady, setIsNameReady] = useState(null);
     const [isCorrect, setIsCorrect] = useState(true);
-    const [isPasswordReady, setIsPasswordReady] = useState(null);
     const [name, setName] = useState(null);
     const [password, setPassword] = useState(null);
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
       event.preventDefault();
-      let index = 0;
-      let find = false;
-      // Check if the username and password match
-      for (; index < users.length; index++) {
-        if (users[index].username === name && users[index].password === password) {
-          find = true;
-          break;
-        }
-      }
-      if (find) {
-        const updatedUsers = users.map((user, i) =>
-          i === index ? { ...user, registered: "yes" } : user
-        );
-        setUsers(updatedUsers); // Update the users array in the parent component
-        setUser(users[index])
-
-        navigate('/chat');
-      } else {
+      const userDetails = {
+        "userName": name,
+        "password": password
+      };
+      const res = await fetch('http://localhost:5000/api/Tokens', {
+        'method': 'post',
+        'headers': {
+          'Content-Type': 'application/json',
+        },
+        'body': JSON.stringify(userDetails)
+      });
+    
+      if (res.status !== 200) {
         setIsCorrect(false);
+      } else {
+        
+        userDetails.token = await res.text();
+          const respond = await fetch('http://localhost:5000/api/Users/' + userDetails.userName, {
+          'headers': {
+          'Content-Type': 'application/json',
+          'authorization': 'bearer ' + userDetails.token // attach the token
+            },
+          }
+                  )
+         // Show the server's response
+          const user = await respond.json()
+          user.registered = "yes"
+          user.token = userDetails.token
+          setUser(user);
+          navigate('/chat');
       }
     }
       
@@ -48,11 +58,12 @@ function LogIn({users , setUsers, setUser}) {
                     {
                     //<!--Username lable-->
 }
-                <UsernameLog users={users} setIsReady={setIsNameReady} setVal={setName} />
+
+                <UsernameLog setVal={setName} />
     {
                 //<!--password lable-->
     }
-                <PasswordLog name={name} setIsReady={setIsPasswordReady} setVal={setPassword} users={users} />
+                <PasswordLog setVal={setPassword}/>
                 {
                     !isCorrect &&(
                         <div className="lable alert alert-danger">

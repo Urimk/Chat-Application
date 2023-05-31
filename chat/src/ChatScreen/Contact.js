@@ -27,6 +27,7 @@ function Contact({ chat, user, onClick }) {
         <span className="username">{otherUser.username}</span>
         <span className="timestamp">{lastMessageTime}</span>
         <span className="msg_preview new_message">{lastMessageTxt}</span>
+
       </div>
     );
   }

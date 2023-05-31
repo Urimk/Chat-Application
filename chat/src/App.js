@@ -16,6 +16,7 @@ function App() {
   ]);
   const [user, setUser] = useState(null);
   const [chats, setChats] = useState([]);
+
   return (
     <Router>
       <Routes>
@@ -26,6 +27,7 @@ function App() {
             users.find(user => user.registered === "yes") ? (
               <Chat users={users} curUser={user} chats={chats} setChats={setChats} 
                     msgIdCounter={msgIdCounter} chatIdCounter={chatIdCounter}/>
+
             ) : (
               <Navigate to="/login" />
             )

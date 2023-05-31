@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 
-function PasswordLog({ name,setIsReady, setVal, users }) {
+
+function PasswordLog({ setVal}) {
   const passRef = useRef(null);
   function setPass(){
     setVal(passRef.current.value);

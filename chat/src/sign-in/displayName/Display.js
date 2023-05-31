@@ -1,33 +1,11 @@
-import { useRef, useState } from "react";
+import {useRef} from "react";
 
-function Display({users,setIsReady,setVal}){
-    const [isNameExist, setIsNameExist] = useState(false);
+function Display({setVal}){
     const nameRef = useRef(null);
 
-     //check the no other user uses this username
-  const checkOtherUserNames = () => {
-    const len = users.length;
-    const inputName = nameRef.current.value;
-    if (len !== 0) {
-      for (let i = 0; i < len; i++) {
-        if (users[i].display === inputName) {
-          setIsNameExist(true);
-          return;
-        }
-      }
-    }
-  
-    setIsNameExist(false);
-  };
-
   //check if ready to submit
-  function isReady(){
-    if(!isNameExist){
-      setIsReady(true);
+  function setDis(){
       setVal(nameRef.current.value);
-    }else{
-      setIsReady(false);
-    }
   }
 
     return(
@@ -36,16 +14,10 @@ function Display({users,setIsReady,setVal}){
                 <div className="input-group-prepend">
                     <span className="input-group-text" id="basic-addon1">Display Name</span>
                 </div>
-                {isNameExist && (
-          <div className="lable alert alert-danger">
-            This displayName already exists, please pick another one
-          </div>
-        )}
                 <input
                 ref={nameRef}
                 onKeyUp={() => {
-                  checkOtherUserNames();
-                  isReady();
+                  setDis();
                 }}
                 type="text" className="form-control" aria-label="Username" aria-describedby="basic-addon1"></input>
             </div>

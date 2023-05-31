@@ -4,6 +4,7 @@ import ChatButtons from "./ChatButtons.js";
 import Message from "./Message.js";
 import SendMessage from "./SendMessage.js";
 
+
 function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, msgIdCounter }) {
   const [chatMessages, setChatMessages] = useState({});
   const messagesContainerRef = useRef(null);
@@ -28,6 +29,7 @@ function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, msgI
       container.scrollTop = container.scrollHeight;
     }
   }, [chat]);
+
 
   const formatDateTime = (dateTime) => {
     const options = {
@@ -81,6 +83,7 @@ function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, msgI
     <div id="chat_window">
       {selectedContact && (
         <>
+
           <ProfilePic pic={selectedContact.profilePic}/>
           <span className="username">{selectedContact.displayName}</span>
         </>
