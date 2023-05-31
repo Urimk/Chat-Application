@@ -8,7 +8,7 @@ function LogIn({users , setUsers, setUser}) {
     const [name, setName] = useState(null);
     const [password, setPassword] = useState(null);
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
       event.preventDefault();
       const userDetiles = {
         "userName": name,
@@ -23,31 +23,15 @@ function LogIn({users , setUsers, setUser}) {
         }
         )
         // The server's response is a json object
-        const json = await res.json()
+       // const json = await res.json()
         if (res.status != 200)
-        setIsCorrect(false);
+        alert('Invalid username and/or password')
         else {
-        // Correct username/password
-        // Take the token the server sent us
-        // and make *another* request to the homepage
-        // but attach the token to the request
-        const res = await fetch('http://localhost:89/', {
-        'headers': {
-        'Content-Type': 'application/json',
-        'authorization': 'bearer ' + json.token // attach the token
-        },
-      // Check if the username and password match
-      if (find) {
-        const updatedUsers = users.map((user, i) =>
-          i === index ? { ...user, registered: "yes" } : user
-        );
-        setUsers(updatedUsers); // Update the users array in the parent component
-        setUser(users[index])
-        navigate('/chat');
+          const userToken = await res.text();
+        alert(userToken)
       }
     }
-  }
-}
+
       
     return (
         <div>
