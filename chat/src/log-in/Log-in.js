@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import PasswordLog from './password/PasswordLog';
 import UsernameLog from './userName/UsernameLog';
+
 function LogIn({setUser}) {
     const navigate = useNavigate();
     const [isCorrect, setIsCorrect] = useState(true);
@@ -42,7 +43,6 @@ function LogIn({setUser}) {
           navigate('/chat');
       }
     }
-
       
     return (
         <div>
@@ -58,6 +58,7 @@ function LogIn({setUser}) {
                     {
                     //<!--Username lable-->
 }
+
                 <UsernameLog setVal={setName} />
     {
                 //<!--password lable-->

@@ -20,12 +20,11 @@ function Sign({ users, setUsers }) {
       try{
         event.preventDefault();
       const newUser = {
-        "userName": name,
-        "password": password,
-        "displayName": display,
-        "profilePic": picture,
-        "registered": "no",
-        "contacts": []
+        username: name,
+        password: password,
+        displayName: display,
+        profilePic: picture,
+        registered: "no",
       };
       const res = await fetch('http://localhost:5000/api/Users', {
 method: 'post', // send a post request

@@ -2,11 +2,13 @@ import React, { useRef } from "react";
 import ProfilePic from "./ProfilePic";
 
 
-function Contact({ contact, onClick }) {
+function Contact({ chat, user, onClick }) {
     const chatPreviewRef = useRef(null);
-  
+
+    const otherUser = chat.users[0].username === user.username ? chat.users[1] : chat.users[0];
+
     const handleClick = () => {
-      onClick(contact);
+      onClick(chat);
   
       const chatPreviews = document.querySelectorAll(".chat_preview");
   
@@ -17,14 +19,15 @@ function Contact({ contact, onClick }) {
       chatPreviewRef.current.classList.add("current_chat");
     };
   
-    const lastMessage = contact.messages.length > 0 ? contact.messages[contact.messages.length - 1].text : "You have no messages with this contact.";
-    const lastMessageTime = contact.messages.length > 0 ? contact.messages[contact.messages.length - 1].time : contact.timestamp;
+    const lastMessageTxt = chat.messages.length > 0 ? chat.messages[chat.messages.length - 1].content : "You have no messages with this contact.";
+    const lastMessageTime = chat.messages.length > 0 ? chat.messages[chat.messages.length - 1].time : chat.created;
     return (
       <div className="chat_preview" ref={chatPreviewRef} onClick={handleClick}>
-        <ProfilePic pic={contact.picture} online={0} />
-        <span className="username">{contact.name}</span>
+        <ProfilePic pic={otherUser.profilePic}/>
+        <span className="username">{otherUser.username}</span>
         <span className="timestamp">{lastMessageTime}</span>
-        <span className="msg_preview new_message">{lastMessage}</span>
+        <span className="msg_preview new_message">{lastMessageTxt}</span>
+
       </div>
     );
   }

@@ -1,7 +1,6 @@
 
 function LeftBarButtons ({ handleLogOut }) {
 
-    console.log(handleLogOut);
     return (
         <div id="icon_menu">
             <img id="chat_icon" className="icon" src="icons/chat_icon.png"></img>

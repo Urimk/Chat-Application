@@ -1,40 +1,58 @@
 import React, { useState, useRef, useEffect } from "react";
 import Contact from "./Contact";
 
-function ContactsBar({ contacts, onContactSelect, onAddContact }) {
+function ContactsBar({users, user, chats, onChatSelect, onAddChat, chatIdCounter }) {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [newContactName, setNewContactName] = useState("");
-  const [newProfilePic, setNewProfilePic] = useState("");
+  const [newContact, setNewContact] = useState(null);
   const overlayRef = useRef(null);
 
-    const handleAddContact = () => {
-        if (newContactName.trim() === "") {
-        return;
+  const handleAddChat = () => {
+
+    if (newContactName.trim() === "") {
+      return;
     }
 
+    const existingUser = users.find((user) => user.username === newContactName);
+
+    if (!existingUser) {
+      return;
+    }
+    setNewContact(existingUser);
+
     const currentTime = new Date().toLocaleString();
-    const newContact = {
-      name: newContactName,
-      picture: newProfilePic || "profile_pics/NO_PIC.png",
-      messages: [],
-      timestamp: currentTime
+    
+    const newChat = {
+      id: chatIdCounter.current++,
+      users: [
+      {
+        "username": user.username,
+        "displayName": user.displayName,
+        "profilePic": user.profilePic
+      },
+      {
+        "username": newContactName,
+        "displayName": existingUser.displayName,
+        "profilePic": existingUser.profilePic
+      }
+    ],
+      lastMessage: null,
+      created: currentTime,
+      messages: []
     };
 
-    const updatedContacts = contacts ? [...contacts, newContact] : [newContact];
-
-    setNewContactName("");
-    setNewProfilePic("");
     setPopupVisible(false);
-    onAddContact(updatedContacts);
+    onAddChat(newChat);
+    console.log(newChat);
   };
 
   const handlePopupToggle = () => {
     setPopupVisible(!isPopupVisible);
   };
 
-  const handleContactClick = (clickedContact) => {
-    const selectedContact = contacts.find((contact) => contact.name === clickedContact.name);
-    onContactSelect(selectedContact);
+  const handleChatClick = (clickedChat) => {
+    const selectedChat = chats.find((chat) => chat.id === clickedChat.id);
+    onChatSelect(selectedChat);
   };
 
   
@@ -56,6 +74,11 @@ function ContactsBar({ contacts, onContactSelect, onAddContact }) {
     };
   }, [isPopupVisible]);
 
+  const filteredChats = chats.filter(
+    (chat) =>
+      chat.users.some((u) => u.username === user.username)
+  );
+  
   return (
     <div id="chats_bar">
       <div id="chat_bar_line1">
@@ -65,12 +88,13 @@ function ContactsBar({ contacts, onContactSelect, onAddContact }) {
         </span>
       </div>
       <div id="chats">
-        {contacts &&
-         contacts.map((contact, index) => (
+        {filteredChats &&
+         filteredChats.map((chat) => (
             <Contact
-            key={index}
-            contact={contact}
-            onClick={() => handleContactClick(contact)}
+            key={chat.id}
+            chat={chat}
+            user={user}
+            onClick={() => handleChatClick(chat)}
 
             />
         ))}
@@ -90,7 +114,7 @@ function ContactsBar({ contacts, onContactSelect, onAddContact }) {
                 <button id="cancel_button" onClick={() => setPopupVisible(false)}>
                   Cancel
                 </button>
-                <button id="add_button" onClick={handleAddContact}>
+                <button id="add_button" onClick={handleAddChat}>
                   Add
                 </button>
               </div>
