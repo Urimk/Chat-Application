@@ -35,8 +35,8 @@ headers: {
 });
 if (res.status != 200){
   const errorMessage = await res.text();
-  alert(errorMessage);
-}else {
+  alert(res.status + " " + res.statusText + "\n" + errorMessage);
+} else {
   navigate('/login'); // Navigate to the LogIn component
 }
 

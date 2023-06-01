@@ -22,7 +22,7 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
     });
     if (res.status != 200){
       const errorMessage = await res.text();
-      alert(errorMessage);
+      alert(res.status + " " + res.statusText + "\n" + errorMessage);
     } else {
       const data = await res.json();
       const newChat = {
@@ -33,6 +33,7 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
           "displayName": data.user.displayName,
           "profilePic": data.user.profilePic
         },
+        lastMessage: null
       }
       setPopupVisible(false);
       setFetchedChats((prevChats) => [...prevChats, newChat]);
@@ -41,8 +42,7 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
   }
 
   async function handleChatClick(clickedChat) {
-    const chats = await getChats();
-    const id = chats.find((chat) => chat.id === clickedChat.id).id;
+    const id = clickedChat.id;
     const res = await fetch(`http://localhost:5000/api/Chats/${id}`, {
       method: 'get',
       headers: {
@@ -52,10 +52,11 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
     });
     if (res.status != 200){
       const errorMessage = await res.text();
-      alert(errorMessage);
+      alert(res.status + " " + res.statusText + "\n" + errorMessage);
+    } else {
+      const data = await res.json();
+      onChatSelect(data);
     }
-    const data = await res.json();
-    onChatSelect(data);
   }
 
   const handlePopupToggle = () => {
@@ -90,15 +91,22 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
       });
       if (res.status != 200){
         const errorMessage = await res.text();
-        alert(errorMessage);
+        alert(res.status + " " + res.statusText + "\n" + errorMessage);
+      } else {
+        const data = await res.json();
+        const updatedChats = data.map(chat => ({
+          ...chat,
+          lastMessage: chat.lastMessage
+        }));
+        setFetchedChats(updatedChats);
+        return data;
       }
-      const data = await res.json();
-      setFetchedChats(data);
-      return data;
+
     } catch (error) {
       console.error('Error:', error);
     }
   }
+  
 
   
   return (

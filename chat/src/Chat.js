@@ -51,13 +51,24 @@ function Chat({curUser, setChats, msgIdCounter}) {
     });
     if (res.status != 204){
       const errorMessage = await res.text();
-      alert(errorMessage);
+      alert(res.status + " " + res.statusText + "\n" + errorMessage);
     } else {
-      console.log(selectedContact);
       setFetchedChats(prevChats => prevChats.filter(c => c.id !== id));
       setSelectedContact(null);
-      console.log(selectedContact);
     }
+  }
+
+  async function updateLastMessage(updatedChat) {
+    const updatedChats = fetchedChats.map((chat) => {
+      if (chat.id === updatedChat.id) {
+        return {
+          ...chat,
+          lastMessage: updatedChat.lastMessage,
+        };
+      }
+      return chat;
+    });
+    setFetchedChats(updatedChats);
   }
 
   return (
@@ -71,7 +82,7 @@ function Chat({curUser, setChats, msgIdCounter}) {
       <ChatBox chat={curChat} user={curUser} selectedContact={selectedContact}
                setSelectedContact={setSelectedContact} setChat={setCurChat} 
                updateChatMessages={updateChatMessages} msgIdCounter={msgIdCounter}
-               handleDeleteChat={handleDeleteChat}/>
+               handleDeleteChat={handleDeleteChat} updateLastMessage={updateLastMessage}/>
     </>
   );
 }
