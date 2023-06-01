@@ -25,7 +25,7 @@ function App() {
           path="/chat"
           element={
             users.find(user => user.registered === "yes") ? (
-              <Chat users={users} curUser={user} chats={chats} setChats={setChats} 
+              <Chat curUser={user}setChats={setChats} 
                     msgIdCounter={msgIdCounter} chatIdCounter={chatIdCounter}/>
 
             ) : (

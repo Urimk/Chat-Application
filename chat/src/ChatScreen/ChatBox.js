@@ -64,8 +64,6 @@ function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, msgI
         lastMessage: messageText
       };
 
-      console.log(updatedMessages);
-      console.log(updatedChat);
   
       setChatMessages((prevMessages) => ({
         ...prevMessages,

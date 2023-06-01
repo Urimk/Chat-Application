@@ -1,27 +1,35 @@
 import React, { useState, useRef, useEffect } from "react";
 import Contact from "./Contact";
 
-function ContactsBar({users, user, chats, onChatSelect, onAddChat, chatIdCounter }) {
+function ContactsBar({ user, onChatSelect, onAddChat, chatIdCounter }) {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [newContactName, setNewContactName] = useState("");
-  const [newContact, setNewContact] = useState(null);
+  const [fetchedChats, setFetchedChats] = useState([]);
   const overlayRef = useRef(null);
 
-  const handleAddChat = () => {
+  useEffect(() => {
+    getChats();
+  }, []);
 
-    if (newContactName.trim() === "") {
-      return;
+  async function handleAddChat() {
+  const contact = { username: newContactName };
+    const res = await fetch('http://localhost:5000/api/Chats', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
+      },
+      'body': JSON.stringify(contact)
+    });
+    if (res.status != 200){
+      if(res.status == 401){
+        alert('You need to log in first!')
+      }
+      if (res.status == 400) {
+        alert('No such user')
+      }
     }
-
-    const existingUser = users.find((user) => user.username === newContactName);
-
-    if (!existingUser) {
-      return;
-    }
-    setNewContact(existingUser);
-
-    const currentTime = new Date().toLocaleString();
-    
+    const data = await res.json();
     const newChat = {
       id: chatIdCounter.current++,
       users: [
@@ -31,19 +39,17 @@ function ContactsBar({users, user, chats, onChatSelect, onAddChat, chatIdCounter
         "profilePic": user.profilePic
       },
       {
-        "username": newContactName,
-        "displayName": existingUser.displayName,
-        "profilePic": existingUser.profilePic
+        "username": data.user.username,
+        "displayName": data.user.displayName,
+        "profilePic": data.user.profilePic
       }
     ],
       lastMessage: null,
-      created: currentTime,
       messages: []
     };
 
     setPopupVisible(false);
     onAddChat(newChat);
-    console.log(newChat);
   };
 
   const handlePopupToggle = () => {
@@ -51,7 +57,7 @@ function ContactsBar({users, user, chats, onChatSelect, onAddChat, chatIdCounter
   };
 
   const handleChatClick = (clickedChat) => {
-    const selectedChat = chats.find((chat) => chat.id === clickedChat.id);
+    const selectedChat = getChats().find((chat) => chat.id === clickedChat.id);
     onChatSelect(selectedChat);
   };
 
@@ -74,10 +80,22 @@ function ContactsBar({users, user, chats, onChatSelect, onAddChat, chatIdCounter
     };
   }, [isPopupVisible]);
 
-  const filteredChats = chats.filter(
-    (chat) =>
-      chat.users.some((u) => u.username === user.username)
-  );
+  async function getChats() {
+    const res = await fetch('http://localhost:5000/api/Chats', {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
+      },
+    });
+    if (res.status != 200){
+      if(res.status == 401){
+        alert('You need to log in first!')
+      }
+    }
+    const data = await res.json();
+    setFetchedChats(data);
+  }
   
   return (
     <div id="chats_bar">
@@ -88,12 +106,11 @@ function ContactsBar({users, user, chats, onChatSelect, onAddChat, chatIdCounter
         </span>
       </div>
       <div id="chats">
-        {filteredChats &&
-         filteredChats.map((chat) => (
+        {fetchedChats &&
+         fetchedChats.map((chat) => (
             <Contact
             key={chat.id}
             chat={chat}
-            user={user}
             onClick={() => handleChatClick(chat)}
 
             />
