@@ -6,13 +6,14 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 
 
-function Chat({curUser, setChats, msgIdCounter, chatIdCounter}) {
+function Chat({curUser, setChats, msgIdCounter}) {
 
   const [curChat, setCurChat] = useState(null);
   const [selectedContact, setselectedContact] = useState(null);
   const navigate = useNavigate();
 
   const handleContactSelect = (chat) => {
+    console.log(chat);
     setCurChat(chat);
     const contact = curUser.username === chat.users[0].username ?
     chat.users[1] : chat.users[0];
@@ -44,7 +45,7 @@ function Chat({curUser, setChats, msgIdCounter, chatIdCounter}) {
       <LeftBar user={curUser} handleLogOut={handleLogOut}/>
       <ContactsBar user={curUser}
                    onChatSelect={handleContactSelect} onAddChat={handleAddChat}
-                   chatIdCounter={chatIdCounter} />
+                   />
       <ChatBox chat={curChat} user={curUser} selectedContact={selectedContact} setChat={setCurChat} 
                updateChatMessages={updateChatMessages} msgIdCounter={msgIdCounter}/>
     </>

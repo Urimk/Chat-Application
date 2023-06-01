@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Display from './displayName/Display';
-import Password from './password/Password';
-import Image from './image/Image';
-import Username from './userName/Username';
+import Display from './displayName/Display.js';
+import Password from './password/Password.js';
+import Image from './image/Image.js';
+import Username from './userName/Username.js';
 import { Link, useNavigate } from 'react-router-dom';
 
 function Sign({ users, setUsers }) {

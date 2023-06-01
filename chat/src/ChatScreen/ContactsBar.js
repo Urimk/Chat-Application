@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import Contact from "./Contact";
+import Contact from "./Contact.js";
 
-function ContactsBar({ user, onChatSelect, onAddChat, chatIdCounter }) {
+function ContactsBar({ user, onChatSelect, onAddChat }) {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [newContactName, setNewContactName] = useState("");
   const [fetchedChats, setFetchedChats] = useState([]);
@@ -31,37 +31,41 @@ function ContactsBar({ user, onChatSelect, onAddChat, chatIdCounter }) {
     }
     const data = await res.json();
     const newChat = {
-      id: chatIdCounter.current++,
-      users: [
-      {
-        "username": user.username,
-        "displayName": user.displayName,
-        "profilePic": user.profilePic
-      },
+      id: data.id,
+      user:
       {
         "username": data.user.username,
         "displayName": data.user.displayName,
         "profilePic": data.user.profilePic
-      }
-    ],
-      lastMessage: null,
-      messages: []
-    };
-
+      },
+    }
     setPopupVisible(false);
+    setFetchedChats((prevChats) => [...prevChats, newChat]);
     onAddChat(newChat);
   };
+
+  async function handleChatClick(clickedChat) {
+    const chats = await getChats();
+    const id = chats.find((chat) => chat.id === clickedChat.id).id;
+    const res = await fetch(`http://localhost:5000/api/Chats/${id}`, {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
+      },
+    });
+    if (res.status != 200){
+      if(res.status == 401){
+        alert('Unauthorized!')
+      }
+    }
+    const data = await res.json();
+    onChatSelect(data);
+  }
 
   const handlePopupToggle = () => {
     setPopupVisible(!isPopupVisible);
   };
-
-  const handleChatClick = (clickedChat) => {
-    const selectedChat = getChats().find((chat) => chat.id === clickedChat.id);
-    onChatSelect(selectedChat);
-  };
-
-  
 
   const handleOverlayClick = () => {
     if (isPopupVisible) {
@@ -95,6 +99,7 @@ function ContactsBar({ user, onChatSelect, onAddChat, chatIdCounter }) {
     }
     const data = await res.json();
     setFetchedChats(data);
+    return data;
   }
   
   return (

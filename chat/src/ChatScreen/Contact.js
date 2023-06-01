@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import ProfilePic from "./ProfilePic";
+import ProfilePic from "./ProfilePic.js";
 
 
 function Contact({ chat, onClick }) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import ProfilePic from "./ProfilePic";
+import ProfilePic from "./ProfilePic.js";
 import ChatButtons from "./ChatButtons.js";
 import Message from "./Message.js";
 import SendMessage from "./SendMessage.js";
