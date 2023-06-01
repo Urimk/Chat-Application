@@ -35,13 +35,13 @@ headers: {
 });
 if (res.status != 200){
   if(res.status == 409){
-    alert('This username is already exist in our system, please pick another one')
+    alert('This username already exists in our system, please pick another one')
   }
 }else {
   navigate('/login'); // Navigate to the LogIn component
 }
 
-      }catch(error){
+      } catch(error){
         console.error('An error occurred:', error);
       } 
     }

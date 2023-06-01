@@ -31,7 +31,7 @@ function LogIn({setUser}) {
           const respond = await fetch('http://localhost:5000/api/Users/' + userDetails.userName, {
           'headers': {
           'Content-Type': 'application/json',
-          'authorization': 'bearer ' + userDetails.token // attach the token
+          'authorization': 'bearer ' + userDetails.token
             },
           }
                   )
