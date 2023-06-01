@@ -5,7 +5,7 @@ import Message from "./Message.js";
 import SendMessage from "./SendMessage.js";
 
 
-function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, msgIdCounter }) {
+function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, msgIdCounter, handleDeleteChat}) {
   const [chatMessages, setChatMessages] = useState({});
   const messagesContainerRef = useRef(null);
   const messages = chat ? chat.messages || [] : [];
@@ -29,7 +29,6 @@ function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, msgI
       container.scrollTop = container.scrollHeight;
     }
   }, [chat]);
-
 
   const formatDateTime = (dateTime) => {
     const options = {
@@ -86,7 +85,7 @@ function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, msgI
           <span className="username">{selectedContact.displayName}</span>
         </>
       )}
-      <ChatButtons />
+      <ChatButtons chat={chat} handleDeleteChat={handleDeleteChat}/>
       <div id="messages" ref={messagesContainerRef}>
       {messages.slice().reverse().map((message, index) => {
         const incoming = message.sender.username === user.username ? 0 : 1;

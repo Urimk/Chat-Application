@@ -34,9 +34,8 @@ headers: {
 'body': JSON.stringify(newUser) // The actual data (username/password)
 });
 if (res.status != 200){
-  if(res.status == 409){
-    alert('This username already exists in our system, please pick another one')
-  }
+  const errorMessage = await res.text();
+  alert(errorMessage);
 }else {
   navigate('/login'); // Navigate to the LogIn component
 }

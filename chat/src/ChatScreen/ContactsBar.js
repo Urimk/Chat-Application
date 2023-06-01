@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import Contact from "./Contact.js";
 
-function ContactsBar({ user, onChatSelect, onAddChat }) {
+function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedChats }) {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [newContactName, setNewContactName] = useState("");
-  const [fetchedChats, setFetchedChats] = useState([]);
   const overlayRef = useRef(null);
 
   useEffect(() => {
@@ -22,27 +21,24 @@ function ContactsBar({ user, onChatSelect, onAddChat }) {
       'body': JSON.stringify(contact)
     });
     if (res.status != 200){
-      if(res.status == 401){
-        alert('You need to log in first!')
+      const errorMessage = await res.text();
+      alert(errorMessage);
+    } else {
+      const data = await res.json();
+      const newChat = {
+        id: data.id,
+        user:
+        {
+          "username": data.user.username,
+          "displayName": data.user.displayName,
+          "profilePic": data.user.profilePic
+        },
       }
-      if (res.status == 400) {
-        alert('No such user')
-      }
-    }
-    const data = await res.json();
-    const newChat = {
-      id: data.id,
-      user:
-      {
-        "username": data.user.username,
-        "displayName": data.user.displayName,
-        "profilePic": data.user.profilePic
-      },
-    }
-    setPopupVisible(false);
-    setFetchedChats((prevChats) => [...prevChats, newChat]);
-    onAddChat(newChat);
-  };
+      setPopupVisible(false);
+      setFetchedChats((prevChats) => [...prevChats, newChat]);
+      onAddChat(newChat);
+    };
+  }
 
   async function handleChatClick(clickedChat) {
     const chats = await getChats();
@@ -55,9 +51,8 @@ function ContactsBar({ user, onChatSelect, onAddChat }) {
       },
     });
     if (res.status != 200){
-      if(res.status == 401){
-        alert('Unauthorized!')
-      }
+      const errorMessage = await res.text();
+      alert(errorMessage);
     }
     const data = await res.json();
     onChatSelect(data);
@@ -85,22 +80,26 @@ function ContactsBar({ user, onChatSelect, onAddChat }) {
   }, [isPopupVisible]);
 
   async function getChats() {
-    const res = await fetch('http://localhost:5000/api/Chats', {
-      method: 'get',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.token}`
-      },
-    });
-    if (res.status != 200){
-      if(res.status == 401){
-        alert('You need to log in first!')
+    try {
+        const res = await fetch('http://localhost:5000/api/Chats', {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        },
+      });
+      if (res.status != 200){
+        const errorMessage = await res.text();
+        alert(errorMessage);
       }
+      const data = await res.json();
+      setFetchedChats(data);
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
     }
-    const data = await res.json();
-    setFetchedChats(data);
-    return data;
   }
+
   
   return (
     <div id="chats_bar">
