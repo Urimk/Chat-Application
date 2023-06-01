@@ -25,7 +25,7 @@ function App() {
           element={
             users.find(user => user.registered === "yes") ? (
               <Chat curUser={user}setChats={setChats} 
-                    msgIdCounter={msgIdCounter} chatIdCounter={chatIdCounter}/>
+                    msgIdCounter={msgIdCounter}/>
 
             ) : (
               <Navigate to="/login" />
