@@ -5,19 +5,17 @@ import Message from "./Message.js";
 import SendMessage from "./SendMessage.js";
 
 
-function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, handleDeleteChat, updateLastMessage}) {
-  const [chatMessages, setChatMessages] = useState({});
+function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, handleDeleteChat, updateLastMessage, getMessages}) {
+  const [chatMessages, setChatMessages] = useState([]);
   const messagesContainerRef = useRef(null);
   const messages = chat ? chat.messages || [] : [];
 
   useEffect(() => {
     if (chat) {
-      setChatMessages((prevMessages) => ({
-        ...prevMessages,
-        [chat]: {
-          messages: chatMessages || [],
-        },
-      }));
+      getMessages(chat)
+        .then((data) => {
+          setChatMessages(data);
+        })
     }
   }, [chat]);
   
@@ -82,9 +80,7 @@ function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, hand
       }
     }    
   }
-
   
-
   return (
     <div id="chat_window">
       {selectedContact && (

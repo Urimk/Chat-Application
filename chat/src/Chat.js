@@ -71,6 +71,24 @@ function Chat({curUser, setChats, msgIdCounter}) {
     setFetchedChats(updatedChats);
   }
 
+  async function getMessages(chat) {
+    const id = chat.id;
+    const res = await fetch(`http://localhost:5000/api/Chats/${id}/Messages`, {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${curUser.token}`
+      },
+    });
+    if (res.status != 200){
+      const errorMessage = await res.text();
+      alert(res.status + " " + res.statusText + "\n" + errorMessage);
+    } else {
+      const data = await res.json();
+      return(data);
+    }
+  }
+
   return (
     <>
       <div id="background"></div>
@@ -78,11 +96,12 @@ function Chat({curUser, setChats, msgIdCounter}) {
       <ContactsBar user={curUser}
                    onChatSelect={handleContactSelect} onAddChat={handleAddChat}
                    fetchedChats={fetchedChats} setFetchedChats={setFetchedChats}
-                   />
+                   getMessages={getMessages}/>
       <ChatBox chat={curChat} user={curUser} selectedContact={selectedContact}
                setSelectedContact={setSelectedContact} setChat={setCurChat} 
                updateChatMessages={updateChatMessages} msgIdCounter={msgIdCounter}
-               handleDeleteChat={handleDeleteChat} updateLastMessage={updateLastMessage}/>
+               handleDeleteChat={handleDeleteChat} updateLastMessage={updateLastMessage}
+               getMessages={getMessages}/>
     </>
   );
 }

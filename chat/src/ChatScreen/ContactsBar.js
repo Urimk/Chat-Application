@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Contact from "./Contact.js";
 
-function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedChats }) {
+function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedChats, getMessages }) {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [newContactName, setNewContactName] = useState("");
   const overlayRef = useRef(null);
@@ -9,6 +9,15 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
   useEffect(() => {
     getChats();
   }, []);
+
+  async function getLastMessage(chat) {
+    const messages = await getMessages(chat);
+    if (messages && messages.length > 0) {
+      messages.sort((a, b) => b.id - a.id);
+      return messages[0];
+    }
+    return null;
+  }
 
   async function handleAddChat() {
   const contact = { username: newContactName };
@@ -25,6 +34,8 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
       alert(res.status + " " + res.statusText + "\n" + errorMessage);
     } else {
       const data = await res.json();
+      const lastMessage = await getLastMessage(data);
+      console.log(lastMessage);
       const newChat = {
         id: data.id,
         user:
@@ -33,7 +44,7 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
           "displayName": data.user.displayName,
           "profilePic": data.user.profilePic
         },
-        lastMessage: null
+        lastMessage: lastMessage
       }
       setPopupVisible(false);
       setFetchedChats((prevChats) => [...prevChats, newChat]);
@@ -94,10 +105,15 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
         alert(res.status + " " + res.statusText + "\n" + errorMessage);
       } else {
         const data = await res.json();
-        const updatedChats = data.map(chat => ({
-          ...chat,
-          lastMessage: chat.lastMessage
-        }));
+        const updatedChats = [];
+        for (const chat of data) {
+          const lastMessage = await getLastMessage(chat);
+          const updatedChat = {
+            ...chat,
+            lastMessage: lastMessage,
+          };
+          updatedChats.push(updatedChat);
+        }
         setFetchedChats(updatedChats);
         return data;
       }
