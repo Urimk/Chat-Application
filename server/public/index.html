@@ -1,12 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <title>User Registration</title>
 </head>
 <body>
-    
+  <h1>User Registration</h1>
+  <form action="http://localhost/12345/api/Users" method="POST">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required><br><br>
+  
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+  
+    <label for="displayName">Display Name:</label>
+    <input type="text" id="displayName" name="displayName" required><br><br>
+  
+    <label for="profilePic">Profile Picture URL:</label>
+    <input type="text" id="profilePic" name="profilePic" required><br><br>
+  
+    <input type="submit" value="Register">
+  </form>
 </body>
 </html>
