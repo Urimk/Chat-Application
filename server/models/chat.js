@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import User from './users'
-import Massage from './message'
+import Message from './message'
 const Schema = mongoose.Schema
 const Chat = new Schema({
     id: {
@@ -10,8 +10,8 @@ const Chat = new Schema({
         type: [User],
         required: true
     },
-    massages:{
-        type: [Massage],
+    messages:{
+        type: [Message],
         required: true
     }
 }); 
