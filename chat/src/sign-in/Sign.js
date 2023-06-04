@@ -25,7 +25,7 @@ function Sign({ users, setUsers }) {
         displayName: display,
         profilePic: picture
       };
-      const res = await fetch('http://localhost:12345/api/Users', {
+      const res = await fetch('http://localhost:5000/api/Users', {
 method: 'post', // send a post request
 headers: {
 'Content-Type': 'application/json', // the data (username/password) is in the form of a JSON object
@@ -34,7 +34,7 @@ headers: {
 });
 if (res.status != 200){
   const errorMessage = await res.text();
-  alert(res.status + " " + res.statusText + "\n" + errorMessage);
+  alert("This usrname is already exists. please peek another one");
 } else {
   navigate('/login'); // Navigate to the LogIn component
 }
