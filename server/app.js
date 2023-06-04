@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const users = require('./routes/users.js');
 const token = require('./routes/token.js');
+const chat = require('./routes/chat.js');
 const { env } = require('custom-env');
 
 const app = express();
@@ -23,6 +24,7 @@ app.use(express.json());
 
 app.use('/api/Users', users);
 app.use('/api/Tokens', token);
+app.use('/api/Chats', chat);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening on port ${process.env.PORT}`);
