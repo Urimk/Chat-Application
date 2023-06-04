@@ -16,7 +16,7 @@ function Sign({ users, setUsers }) {
   const [picture, setPicture] = useState(null);
 
   async function handleSubmit(event) {
-    if (isNameReady && isPasswordReady) {
+    if (isNameReady && isPasswordReady && display) {
       try{
         event.preventDefault();
       const newUser = {
@@ -42,6 +42,8 @@ if (res.status != 200){
       } catch(error){
         console.error('An error occurred:', error);
       } 
+    }else{
+      alert("One or more of the lables are missing");
     }
   }
 
