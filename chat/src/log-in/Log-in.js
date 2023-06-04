@@ -12,7 +12,7 @@ function LogIn({setUser,setUsers}) {
     async function handleSubmit(event) {
       event.preventDefault();
       const userDetails = {
-        "userName": name,
+        "username": name,
         "password": password
       };
       const res = await fetch('http://localhost:12345/api/Tokens', {
@@ -32,7 +32,7 @@ function LogIn({setUser,setUsers}) {
         
         const json = await res.json();
         let token = json.token;
-          const respond = await fetch('http://localhost:12345/api/Users/' + userDetails.userName, {
+          const respond = await fetch('http://localhost:12345/api/Users/' + userDetails.username, {
           'headers': {
           'Content-Type': 'application/json',
           'authorization': 'bearer ' + token
