@@ -25,7 +25,7 @@ const createUser = async (username, password, displayName, profilePic) => {
 
 const checkUser = async(username,password) => {
     let user = await User.findOne({username: username, password: password});
-    if(user == {})
+    if(user === null)
         return false
     return true
 }
