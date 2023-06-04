@@ -1,5 +1,5 @@
 
-import chatService from '../services/chatService';
+chatService = require('../services/chatService');
 
 function printError(error) {
     if (error.statusCode === 500) {

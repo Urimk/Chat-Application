@@ -1,9 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import PasswordLog from './password/PasswordLog';
-import UsernameLog from './userName/UsernameLog';
+import PasswordLog from './password/PasswordLog.js';
+import UsernameLog from './userName/UsernameLog.js';
 
-function LogIn({setUser}) {
+function LogIn({setUser,setUsers}) {
     const navigate = useNavigate();
     const [isCorrect, setIsCorrect] = useState(true);
     const [name, setName] = useState(null);
@@ -15,7 +15,7 @@ function LogIn({setUser}) {
         "userName": name,
         "password": password
       };
-      const res = await fetch('http://localhost:5000/api/Tokens', {
+      const res = await fetch('http://localhost:12345/api/Tokens', {
         'method': 'post',
         'headers': {
           'Content-Type': 'application/json',
@@ -24,22 +24,26 @@ function LogIn({setUser}) {
       });
     
       if (res.status !== 200) {
-        setIsCorrect(false);
+        if(res.status === 401 || res.status === 403)
+          alert("You have problem with your Token")
+        else
+          setIsCorrect(false);
       } else {
         
-        userDetails.token = await res.text();
-          const respond = await fetch('http://localhost:5000/api/Users/' + userDetails.userName, {
+        const json = await res.json();
+        let token = json.token;
+          const respond = await fetch('http://localhost:12345/api/Users/' + userDetails.userName, {
           'headers': {
           'Content-Type': 'application/json',
-          'authorization': 'bearer ' + userDetails.token // attach the token
+          'authorization': 'bearer ' + token
             },
           }
                   )
-         // Show the server's response
           const user = await respond.json()
           user.registered = "yes"
-          user.token = userDetails.token
+          user.token = json.token
           setUser(user);
+          setUsers(prevUsers => [...prevUsers, user]);
           navigate('/chat');
       }
     }

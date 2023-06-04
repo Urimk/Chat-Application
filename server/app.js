@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const users = require('./routes/users.js');
+const token = require('./routes/token.js');
 const { env } = require('custom-env');
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use('/api/Users', users);
+app.use('/api/Tokens', token);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening on port ${process.env.PORT}`);

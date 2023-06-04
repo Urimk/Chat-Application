@@ -393,7 +393,10 @@ body {
 }
 
 #dots_icon {
-  width: 2% !important;
+  top: -3px;
+  right: 7px;
+  width: 20% !important;
+  height: 85% !important;
 }
 
 #messages {

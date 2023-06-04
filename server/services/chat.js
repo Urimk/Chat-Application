@@ -1,5 +1,5 @@
-import Chat from '../models/chat';
-import User from '../models/user';
+Chat = require('../models/chat');
+User = require('../models/user');
 
 async function createChat(user ,username) {
   try {
