@@ -1,4 +1,5 @@
-import {userService} from '../services/users.js'
+
+userService = require('../services/users.js')
 
 const createUser = async(req,res) =>{
     res.json(await userService.createUser(req.body.username,req.body.password,
@@ -13,7 +14,7 @@ const getUserByUserNamePassword = async(req,res) => {
     res.json(user)
 }
 
-export default {
+module.exports = {
     createUser,
     getUserByUserNamePassword
 };

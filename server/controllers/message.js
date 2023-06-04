@@ -1,4 +1,5 @@
-import {messageService} from '../services/message'
+
+messageService = require('../services/message')
 
 const createMassage = async(req,res) =>{
     res.json(await messageService.createMassage(req.body.created,req.body.sender,
@@ -13,7 +14,7 @@ const getMessageById = async(req,res) => {
     res.json(mes)
 }
 
-export default {
+module.exports = {
     createMassage,
     getMessageById
 };

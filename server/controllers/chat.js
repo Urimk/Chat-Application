@@ -1,3 +1,4 @@
+
 import chatService from '../services/chatService';
 
 function printError(error) {
@@ -82,5 +83,4 @@ exports = {
   getAllChatsController,
   getChatById,
   updateChat,
-  deleteChat, 
-};
+  deleteChat, }

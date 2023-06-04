@@ -1,4 +1,5 @@
-import User from '../models/users.js'
+
+User = require('../models/users.js')
 
 const createUser = async (username,password,displayName,profilePic) =>{
     const user = new User({username: username, password: password, displayName: displayName, profilePic: profilePic});
@@ -18,6 +19,4 @@ const getUserByUserName = async(username) => {
 
 
 
-export const userService = () => {
-    return {createUser, getUserByUserName};
-  };
+module.exports = {createUser, getUserByUserName};

@@ -1,9 +1,9 @@
-import messageController from '../controllers/message';
-import express from 'express';
+const express = require('express');
+const messageController = require('../controllers/message');
 
-const massege = express.Router();
+const message = express.Router();
 
-massege.post('/',messageController.createMassage);
-massege.get('/',messageController.getMessageById);
+message.post('/', messageController.createMassage);
+message.get('/', messageController.getMessageById);
 
-export default massege;
+module.exports = message;
