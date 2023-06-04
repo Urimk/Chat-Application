@@ -1,23 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
-import ProfilePic from "./ProfilePic";
+import ProfilePic from "./ProfilePic.js";
 import ChatButtons from "./ChatButtons.js";
 import Message from "./Message.js";
 import SendMessage from "./SendMessage.js";
 
 
-function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, msgIdCounter }) {
-  const [chatMessages, setChatMessages] = useState({});
+function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, handleDeleteChat, updateLastMessage, getMessages}) {
+  const [chatMessages, setChatMessages] = useState([]);
   const messagesContainerRef = useRef(null);
   const messages = chat ? chat.messages || [] : [];
 
   useEffect(() => {
     if (chat) {
-      setChatMessages((prevMessages) => ({
-        ...prevMessages,
-        [chat]: {
-          messages: chatMessages || [],
-        },
-      }));
+      getMessages(chat)
+        .then((data) => {
+          setChatMessages(data);
+        })
     }
   }, [chat]);
   
@@ -30,55 +28,59 @@ function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, msgI
     }
   }, [chat]);
 
-
-  const formatDateTime = (dateTime) => {
-    const options = {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",   
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-      hour12: false,
-    };
-    return dateTime.toLocaleString("en-US", options);
-  };
-
-  const handleSendMessage = (messageText) => {
+  async function handleSendMessage (messageText) {
     if (chat) {
-      const newMessage = {
-        id: msgIdCounter.current++,
-        content: messageText,
-        time: formatDateTime(new Date()),
-        sender: user
-      };
-  
-      const updatedMessages = [
-        ...(chat.messages || []),
-        newMessage,
-      ];
-  
-      const updatedChat = {
-        ...chat,
-        messages: updatedMessages,
-        lastMessage: messageText
-      };
-
-      console.log(updatedMessages);
-      console.log(updatedChat);
-  
-      setChatMessages((prevMessages) => ({
-        ...prevMessages,
-        [chat]: {
-          messages: updatedMessages,
-          lastMessage: messageText
+      const msg = { msg: messageText };
+      const id = chat.id
+      const res = await fetch(`http://localhost:5000/api/Chats/${id}/Messages`, {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
         },
-      }));
-      updateChatMessages(chat.id, updatedMessages);
-      setChat(updatedChat);
-    }
-  };
-
+        'body': JSON.stringify(msg)
+      });
+      if (res.status != 200){
+        const errorMessage = await res.text();
+        alert(res.status + " " + res.statusText + "\n" + errorMessage);
+      } else {
+        const data = await res.json();
+        const newMessage = {
+          id: data.id,
+          created: data.created,
+          sender:
+          {
+            "username": data.sender.username,
+            "displayName": data.sender.displayName,
+            "profilePic": data.sender.profilePic
+          },
+          content: data.content
+        }
+        const updatedMessages = [
+          ...(chat.messages || []),
+          newMessage,
+        ];
+          
+        const updatedChat = {
+          ...chat,
+          messages: updatedMessages,
+          lastMessage: newMessage
+        };
+    
+        setChatMessages((prevMessages) => ({
+          ...prevMessages,
+          [chat]: {
+            messages: updatedMessages,
+            lastMessage: newMessage
+          },
+        }));
+        updateChatMessages(chat.id, updatedMessages);
+        setChat(updatedChat);
+        updateLastMessage(updatedChat);
+      }
+    }    
+  }
+  
   return (
     <div id="chat_window">
       {selectedContact && (
@@ -88,7 +90,7 @@ function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, msgI
           <span className="username">{selectedContact.displayName}</span>
         </>
       )}
-      <ChatButtons />
+      <ChatButtons chat={chat} handleDeleteChat={handleDeleteChat}/>
       <div id="messages" ref={messagesContainerRef}>
       {messages.slice().reverse().map((message, index) => {
         const incoming = message.sender.username === user.username ? 0 : 1;
@@ -96,7 +98,7 @@ function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, msgI
             <Message
             key={index}
             text={message.content}
-            time={message.time}
+            dateAndTime={message.created}
             incoming={incoming}
             />
         );

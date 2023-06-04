@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Display from './displayName/Display';
-import Password from './password/Password';
-import Image from './image/Image';
-import Username from './userName/Username';
+import Display from './displayName/Display.js';
+import Password from './password/Password.js';
+import Image from './image/Image.js';
+import Username from './userName/Username.js';
 import { Link, useNavigate } from 'react-router-dom';
 
 function Sign({ users, setUsers }) {
@@ -34,14 +34,13 @@ headers: {
 'body': JSON.stringify(newUser) // The actual data (username/password)
 });
 if (res.status != 200){
-  if(res.status == 409){
-    alert('This username is already exist in our system, please pick another one')
-  }
-}else {
+  const errorMessage = await res.text();
+  alert(res.status + " " + res.statusText + "\n" + errorMessage);
+} else {
   navigate('/login'); // Navigate to the LogIn component
 }
 
-      }catch(error){
+      } catch(error){
         console.error('An error occurred:', error);
       } 
     }

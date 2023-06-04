@@ -1,11 +1,9 @@
 import React, { useRef } from "react";
-import ProfilePic from "./ProfilePic";
+import ProfilePic from "./ProfilePic.js";
 
 
-function Contact({ chat, user, onClick }) {
+function Contact({ chat, onClick }) {
     const chatPreviewRef = useRef(null);
-
-    const otherUser = chat.users[0].username === user.username ? chat.users[1] : chat.users[0];
 
     const handleClick = () => {
       onClick(chat);
@@ -19,15 +17,21 @@ function Contact({ chat, user, onClick }) {
       chatPreviewRef.current.classList.add("current_chat");
     };
   
-    const lastMessageTxt = chat.messages.length > 0 ? chat.messages[chat.messages.length - 1].content : "You have no messages with this contact.";
-    const lastMessageTime = chat.messages.length > 0 ? chat.messages[chat.messages.length - 1].time : chat.created;
+    const lastMessageTxt = chat.lastMessage ? chat.lastMessage.content : "You have no messages with this contact.";
+    const lastMessageTime = chat.lastMessage ? chat.lastMessage.created : "";
+    let dateTimeFormatted;
+    if (lastMessageTime !== "") {
+      const dateTime = new Date(lastMessageTime);
+      const date = dateTime.toLocaleDateString();
+      const time = dateTime.toLocaleTimeString();
+      dateTimeFormatted = `${date} ${time}`;
+    }
     return (
       <div className="chat_preview" ref={chatPreviewRef} onClick={handleClick}>
-        <ProfilePic pic={otherUser.profilePic}/>
-        <span className="username">{otherUser.username}</span>
-        <span className="timestamp">{lastMessageTime}</span>
+        <ProfilePic pic={chat.user.profilePic}/>
+        <span className="username">{chat.user.username}</span>
         <span className="msg_preview new_message">{lastMessageTxt}</span>
-
+        <span className="timestamp">{dateTimeFormatted}</span>
       </div>
     );
   }

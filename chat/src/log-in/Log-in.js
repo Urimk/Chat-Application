@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import PasswordLog from './password/PasswordLog';
-import UsernameLog from './userName/UsernameLog';
+import PasswordLog from './password/PasswordLog.js';
+import UsernameLog from './userName/UsernameLog.js';
 
 function LogIn({setUser}) {
     const navigate = useNavigate();
@@ -31,7 +31,7 @@ function LogIn({setUser}) {
           const respond = await fetch('http://localhost:5000/api/Users/' + userDetails.userName, {
           'headers': {
           'Content-Type': 'application/json',
-          'authorization': 'bearer ' + userDetails.token // attach the token
+          'authorization': 'bearer ' + userDetails.token
             },
           }
                   )
