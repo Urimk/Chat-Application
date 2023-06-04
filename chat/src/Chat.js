@@ -42,7 +42,7 @@ function Chat({curUser, setChats, msgIdCounter}) {
 
   async function handleDeleteChat(chat) {
     const id = chat.id
-    const res = await fetch(`http://localhost:5000/api/Chats/${id}`, {
+    const res = await fetch(`http://localhost:12345/api/Chats/${id}`, {
       method: 'delete',
       headers: {
         'Content-Type': 'application/json',

@@ -37,7 +37,7 @@ async function getAllChatsController(req, res) {
 
 // Get a chat by its ID
 async function getChatById(req, res) {
-    const { id } = req.params;
+    const { id } = req.params.id;
   
     try {
       const chat = await chatService.getChatById(id);
@@ -50,7 +50,7 @@ async function getChatById(req, res) {
 // Update a chat
 async function updateChat(req, res) {
   try {
-    const chatId = req.params.chatId;
+    const chatId = req.params.id;
     const updatedData = req.body;
     const updatedChat = await chatService.updateChat(chatId, updatedData);
     if (!updatedChat) {
@@ -65,7 +65,7 @@ async function updateChat(req, res) {
 // Delete a chat
 async function deleteChat(req, res) {
   try {
-    const chatId = req.params.chatId;
+    const chatId = req.params.id;
     const deletedChat = await chatService.deleteChat(chatId);
     if (!deletedChat) {
       return res.status(404).json({ error: 'Chat not found' });
