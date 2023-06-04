@@ -1,18 +1,21 @@
-import User from './models/users'
+User = require('../models/users.js')
 
 const createUser = async (username,password,displayName,profilePic) =>{
     const user = new User({username: username, password: password, displayName: displayName, profilePic: profilePic});
     return await user.save();
 }
 
-const getUserByUserNamePassword = async(username,password) => {
-    return await User.find({username: username, password: password});
-}
-
 const getUserByUserName = async(username) => {
-    return await User.find({username: username});
+    let user = await User.find({username: username});
+    if(user == {})
+    return null
+    return{
+        username: user.username,
+        displayName: user.displayName,
+        profilePic: user.profilePic
+    }
 }
 
 
 
-module.exports = {createUser, getUserByUserNamePassword, getUserByUserName}
+module.exports = {createUser, getUserByUserName};

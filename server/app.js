@@ -1,25 +1,27 @@
-import express from 'express'
-import bodyParser from 'body-parser';
-import mongoose from 'mongoose'
-import cors from 'cors'
-import users from "./routes/users"
-import costomENV from 'custom-env'
-costomENV.env(process.env.NODE_ENV,'./config')
-console.log(process.env.CONNECTION_STRING)
-console.log(process.env.PORT)
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const users = require('./routes/users.js');
+const { env } = require('custom-env');
 
-mongoose.connect(process.env.CONNECTION_STRING,
-    {
-        userNewUrlParser: true,
-        userUnifiedTopology: true
-    })
-app.use('/users', users);
-app.use(express.static('public'));
+const app = express();
+env(process.env.NODE_ENV, './config');
+
+console.log(process.env.CONNECTION_STRING);
+console.log(process.env.PORT);
+
+mongoose
+  .connect(process.env.CONNECTION_STRING + '/chat-app')
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((error) => console.error('Failed to connect to MongoDB', error));
+
 app.use(cors());
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
+app.use('/api/Users', users);
 
-
-
-app.listen(process.env.PORT)
+app.listen(process.env.PORT, () => {
+  console.log(`Server is listening on port ${process.env.PORT}`);
+});

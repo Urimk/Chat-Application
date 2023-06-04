@@ -1,11 +1,7 @@
-import { Int32 } from 'bson';
-import mongoose from 'mongoose'
-import User from './users'
+const mongoose = require('mongoose');
+const User = require('./users');
 const Schema = mongoose.Schema
 const Massage = new Schema({
-    id: {
-        type: 	integer(Int32),
-    },
     created: {
         type: String($date-time)
     },
