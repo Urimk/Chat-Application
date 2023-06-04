@@ -23,10 +23,9 @@ function Sign({ users, setUsers }) {
         username: name,
         password: password,
         displayName: display,
-        profilePic: picture,
-        registered: "no",
+        profilePic: picture
       };
-      const res = await fetch('http://localhost:5000/api/Users', {
+      const res = await fetch('http://localhost:12345/api/Users', {
 method: 'post', // send a post request
 headers: {
 'Content-Type': 'application/json', // the data (username/password) is in the form of a JSON object
