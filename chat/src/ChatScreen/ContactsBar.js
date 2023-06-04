@@ -1,61 +1,78 @@
 import React, { useState, useRef, useEffect } from "react";
-import Contact from "./Contact";
+import Contact from "./Contact.js";
 
-function ContactsBar({users, user, chats, onChatSelect, onAddChat, chatIdCounter }) {
+function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedChats, getMessages }) {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [newContactName, setNewContactName] = useState("");
-  const [newContact, setNewContact] = useState(null);
   const overlayRef = useRef(null);
 
-  const handleAddChat = () => {
+  useEffect(() => {
+    getChats();
+  }, []);
 
-    if (newContactName.trim() === "") {
-      return;
+  async function getLastMessage(chat) {
+    const messages = await getMessages(chat);
+    if (messages && messages.length > 0) {
+      messages.sort((a, b) => b.id - a.id);
+      return messages[0];
     }
+    return null;
+  }
 
-    const existingUser = users.find((user) => user.username === newContactName);
-
-    if (!existingUser) {
-      return;
-    }
-    setNewContact(existingUser);
-
-    const currentTime = new Date().toLocaleString();
-    
-    const newChat = {
-      id: chatIdCounter.current++,
-      users: [
-      {
-        "username": user.username,
-        "displayName": user.displayName,
-        "profilePic": user.profilePic
+  async function handleAddChat() {
+  const contact = { username: newContactName };
+    const res = await fetch('http://localhost:5000/api/Chats', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
       },
-      {
-        "username": newContactName,
-        "displayName": existingUser.displayName,
-        "profilePic": existingUser.profilePic
+      'body': JSON.stringify(contact)
+    });
+    if (res.status != 200){
+      const errorMessage = await res.text();
+      alert(res.status + " " + res.statusText + "\n" + errorMessage);
+    } else {
+      const data = await res.json();
+      const lastMessage = await getLastMessage(data);
+      console.log(lastMessage);
+      const newChat = {
+        id: data.id,
+        user:
+        {
+          "username": data.user.username,
+          "displayName": data.user.displayName,
+          "profilePic": data.user.profilePic
+        },
+        lastMessage: lastMessage
       }
-    ],
-      lastMessage: null,
-      created: currentTime,
-      messages: []
+      setPopupVisible(false);
+      setFetchedChats((prevChats) => [...prevChats, newChat]);
+      onAddChat(newChat);
     };
+  }
 
-    setPopupVisible(false);
-    onAddChat(newChat);
-    console.log(newChat);
-  };
+  async function handleChatClick(clickedChat) {
+    const id = clickedChat.id;
+    const res = await fetch(`http://localhost:5000/api/Chats/${id}`, {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
+      },
+    });
+    if (res.status != 200){
+      const errorMessage = await res.text();
+      alert(res.status + " " + res.statusText + "\n" + errorMessage);
+    } else {
+      const data = await res.json();
+      onChatSelect(data);
+    }
+  }
 
   const handlePopupToggle = () => {
     setPopupVisible(!isPopupVisible);
   };
-
-  const handleChatClick = (clickedChat) => {
-    const selectedChat = chats.find((chat) => chat.id === clickedChat.id);
-    onChatSelect(selectedChat);
-  };
-
-  
 
   const handleOverlayClick = () => {
     if (isPopupVisible) {
@@ -74,10 +91,39 @@ function ContactsBar({users, user, chats, onChatSelect, onAddChat, chatIdCounter
     };
   }, [isPopupVisible]);
 
-  const filteredChats = chats.filter(
-    (chat) =>
-      chat.users.some((u) => u.username === user.username)
-  );
+  async function getChats() {
+    try {
+        const res = await fetch('http://localhost:5000/api/Chats', {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        },
+      });
+      if (res.status != 200){
+        const errorMessage = await res.text();
+        alert(res.status + " " + res.statusText + "\n" + errorMessage);
+      } else {
+        const data = await res.json();
+        const updatedChats = [];
+        for (const chat of data) {
+          const lastMessage = await getLastMessage(chat);
+          const updatedChat = {
+            ...chat,
+            lastMessage: lastMessage,
+          };
+          updatedChats.push(updatedChat);
+        }
+        setFetchedChats(updatedChats);
+        return data;
+      }
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  
+
   
   return (
     <div id="chats_bar">
@@ -88,12 +134,11 @@ function ContactsBar({users, user, chats, onChatSelect, onAddChat, chatIdCounter
         </span>
       </div>
       <div id="chats">
-        {filteredChats &&
-         filteredChats.map((chat) => (
+        {fetchedChats &&
+         fetchedChats.map((chat) => (
             <Contact
             key={chat.id}
             chat={chat}
-            user={user}
             onClick={() => handleChatClick(chat)}
 
             />

@@ -407,7 +407,8 @@ body {
 }
 
 #dots_icon {
-  width: 2% !important;
+  width: 3% !important;
+  padding: 5px;
 }
 
 #messages {
@@ -544,4 +545,22 @@ body {
   position: relative;
   width: 25px;
   margin-right: 3%;
+}
+
+.delete-chat-option {
+  position: absolute;
+  top: 25px;
+  left: 118px;
+  padding: 5px;
+  box-sizing: content-box;
+  background-color: #f44336;
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.delete-chat-option:hover {
+  background-color: #d32f2f;
 }
