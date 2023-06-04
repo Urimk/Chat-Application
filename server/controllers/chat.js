@@ -78,7 +78,7 @@ async function deleteChat(req, res) {
 
 
 
-exports = {
+module.exports = {
   createChat,
   getAllChatsController,
   getChatById,
