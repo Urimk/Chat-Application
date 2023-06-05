@@ -32,11 +32,11 @@ function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, hand
     if (chat) {
       const msg = { msg: messageText };
       const id = chat.id
-      const res = await fetch(`http://localhost:5000/api/Chats/${id}/Messages`, {
+      const res = await fetch(`http://localhost:12345/api/Chats/${id}/Messages`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `bearer ${user.token}`
         },
         'body': JSON.stringify(msg)
       });

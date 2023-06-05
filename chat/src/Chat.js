@@ -46,7 +46,7 @@ function Chat({curUser, setChats, msgIdCounter}) {
       method: 'delete',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${curUser.token}`
+        'Authorization': `bearer ${curUser.token}`
       },
     });
     if (res.status != 204){
@@ -73,11 +73,11 @@ function Chat({curUser, setChats, msgIdCounter}) {
 
   async function getMessages(chat) {
     const id = chat.id;
-    const res = await fetch(`http://localhost:5000/api/Chats/${id}/Messages`, {
+    const res = await fetch(`http://localhost:12345/api/Chats/${id}/Messages`, {
       method: 'get',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${curUser.token}`
+        'Authorization': 'bearer '  + curUser.token
       },
     });
     if (res.status != 200){

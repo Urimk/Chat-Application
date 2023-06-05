@@ -29,7 +29,7 @@ const getUserByUserNamePassword = async(req,res) => {
     // Generate the token.
     const token = jwt.sign({ username: req.body.username }, key)
     // Return the token to the browser
-    res.status(200).json({ token });
+    res.status(200).json( token );
 }
 
 const getUserByUserName = async(req,res) => {
@@ -52,6 +52,7 @@ const isLoggedIn = (req, res, next) => {
     // Verify the token is valid
     const data = jwt.verify(token, key);
     // Token validation was successful. Continue to the actual function (index)
+    req.username = data.username
     return next()
     } catch (err) {
     return res.status(401).send("Invalid Token");

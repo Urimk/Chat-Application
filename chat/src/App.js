@@ -9,7 +9,10 @@ import Chat from './Chat.js';
 
 function App() {
   const msgIdCounter = useRef(1);
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([
+    { "username": "a", "password": "123456", "displayName": "big A", "profilePic": null, "registered": "yes", "chats": []},
+    { "username": "b", "password": "123456", "displayName": "big B", "profilePic": null, "registered": "yes", "chats": []}
+  ]);
   const [user, setUser] = useState(null);
   const [chats, setChats] = useState([]);
 

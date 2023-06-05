@@ -3,10 +3,11 @@ const User = require('./users');
 const Schema = mongoose.Schema
 const Massage = new Schema({
     created: {
-        type: String($date-time)
+        type: String
     },
     sender:{
-        type: User
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     },
     content: {
         type: String,

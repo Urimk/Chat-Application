@@ -1,11 +1,12 @@
 
-chatService = require('../services/chatService');
+chatService = require('../services/chat');
+userService = require('../services/users');
 
-function printError(error) {
+function printError(req, res,error) {
     if (error.statusCode === 500) {
         res.status(500).json({ error: 'Internal Server Error' });
     } else if (error.statusCode === 401) {
-    res.status(401).json({ error: 'Unauthorized' });
+    res.status(401).json({ error: 'Unothorized' });
     } else {
     res.status(404).json({ error: error.message });
     }
@@ -14,14 +15,13 @@ function printError(error) {
 // Create a new chat
 async function createChat(req, res) {
     try {
-        if (!req.user) {
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
         const chatData = req.body;
-        const createdChat = await chatService.createChat(chatData);
+        user = await userService.getUserByUserName(req.username)
+
+        const createdChat = await chatService.createChat(user,chatData.username);
         res.status(200).json(createdChat);
     } catch (error) {
-        printError(error);         
+        printError(req, res,error);         
     }
 }
 

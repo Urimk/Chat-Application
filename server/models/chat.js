@@ -5,12 +5,12 @@ const Massage = require('./message');
 const Schema = mongoose.Schema;
 const ChatSchema = new Schema({
   users: {
-    type: [User],
-    required: true,
+    type: [],
+    required: true
   },
   massages: {
-    type: [Massage],
-    required: true,
+    type: [],
+    required: true
   },
 });
 

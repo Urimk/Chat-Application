@@ -21,11 +21,11 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
 
   async function handleAddChat() {
   const contact = { username: newContactName };
-    const res = await fetch('http://localhost:5000/api/Chats', {
+    const res = await fetch('http://127.0.0.1:12345/api/Chats', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.token}`
+        'Authorization': 'bearer ' + user.token
       },
       'body': JSON.stringify(contact)
     });
@@ -54,7 +54,7 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
 
   async function handleChatClick(clickedChat) {
     const id = clickedChat.id;
-    const res = await fetch(`http://localhost:5000/api/Chats/${id}`, {
+    const res = await fetch(`http://localhost:12345/api/Chats/${id}`, {
       method: 'get',
       headers: {
         'Content-Type': 'application/json',
