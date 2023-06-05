@@ -1,5 +1,4 @@
-Message = require('../models/message.js')
-Chat = require('../models/chat.js');
+Massage = require('../models/message.js')
 
 const createMassage = async (created,sender,content) =>{
     const mes = new Massage({created: created,sender: sender,content: content});
