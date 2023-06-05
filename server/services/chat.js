@@ -1,5 +1,5 @@
 Chat = require('../models/chat');
-User = require('../models/user');
+User = require('../models/users');
 
 async function createChat(user ,username) {
   try {
@@ -22,11 +22,12 @@ async function createChat(user ,username) {
     });
 
     const savedChat = await newChat.save();
-    // Perform the filtering
-    const { id, users } = savedChat;
-    const filteredChat = { id, user: users.find(u => u._id.toString() !== user._id.toString()) };
+// Perform the filtering
+const { id, users } = savedChat;
+const filteredChat = { id, users: users.find(u => u._id.toString() !== user._id.toString()) };
 
-    return filteredChat;
+
+    return savedChat;
   } catch (error) {
     throw new Error('Failed to create chat');
   }
@@ -75,14 +76,6 @@ async function getAllChats() {
     }
   }
 
-export default { createChat, getAllChats, getChatById };
-const Chat = require('../models/chat.js');
-
-const createChat = async (user1, user2) => {
-  const chat = new Chat({ users: [user1, user2], messages: [] });
-  return await chat.save();
-};
-
 const getChatsByUser = async (username) => {
   try {
     const chats = await Chat.find({
@@ -110,4 +103,6 @@ module.exports = {
   createChat,
   getChatsByUser,
   deleteChat,
+  getAllChats,
+  getChatById
 };
