@@ -12,19 +12,14 @@ async function createChat(user ,username) {
       error.statusCode = 400;
       throw error;
     }
-    const lastChat = await Chat.findOne().sort({ id: -1 }).limit(1);
-    let nextId = 1;
-    if (lastChat) {
-      nextId = lastChat.id + 1;
-    }
 
     const newChat = new Chat({
-      id: nextId,
       users: [otherUser, user],
       messages: [],
     });
     const savedChat = await newChat.save();
-    const { id, users } = savedChat;
+    const id = savedChat._id;
+    const users = savedChat.users
     const filteredChat = { id, users };
     return filteredChat;
   } catch (error) {

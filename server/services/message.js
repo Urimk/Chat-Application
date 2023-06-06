@@ -5,7 +5,7 @@ User = require('../models/users.js');
 
 async function getMessagesByChatId(chatId) {
   try {
-    const chat = await Chat.findOne({ id: chatId }).populate({
+    const chat = await Chat.findOne({ _id: chatId }).populate({
         path: 'messages',
         populate: {
           path: 'user',
