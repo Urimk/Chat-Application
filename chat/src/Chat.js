@@ -37,6 +37,7 @@ function Chat({curUser, setChats, msgIdCounter}) {
 
   function handleLogOut(event) {
     event.preventDefault();
+    curUser.registered = "no"
     navigate('/login');
   }
 
