@@ -22,18 +22,18 @@ const createUser = async (req, res) => {
   };
 
 const getUserByUserNamePassword = async(req,res) => {
-    const user = await userService.checkUser(req.body.username,req.body.password)
+    const user = await userService.checkUser(req.body.userName,req.body.password)
     if(!user){
         return res.status(404).json({ errors: ['user was not found']})
     }
     // Generate the token.
-    const token = jwt.sign({ username: req.body.username }, key)
+    const token = jwt.sign({ username: req.body.userName }, key)
     // Return the token to the browser
     res.status(200).json( token );
 }
 
 const getUserByUserName = async(req,res) => {
-    const user = await userService.getUserByUserName(req.params.username);
+    const user = await userService.getUserByUserName(req.params.userName);
     if (user !== null ) {
         res.status(200).json(user);
       } else {
@@ -47,7 +47,8 @@ const isLoggedIn = (req, res, next) => {
     
     if (req.headers.authorization) {
     // Extract the token from that header
-    const token = req.headers.authorization.split(" ")[1];
+    let tok = req.headers.authorization.split(" ")[1];
+    const token = tok.replace(/"/g, '');
     try {
     // Verify the token is valid
     const data = jwt.verify(token, key);
