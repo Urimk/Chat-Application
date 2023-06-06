@@ -2,48 +2,55 @@
 chatService = require('../services/chat');
 userService = require('../services/users');
 
-function printError(req, res,error) {
-    if (error.statusCode === 500) {
-        res.status(500).json({ error: 'Internal Server Error' });
-    } else if (error.statusCode === 401) {
-    res.status(401).json({ error: 'Unothorized' });
-    } else {
+function printError(res, error) {
+  if (error.statusCode === 500) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  } else if (error.statusCode === 401) {
+    res.status(401).json({ error: 'Unauthorized' });
+  } else {
     res.status(404).json({ error: error.message });
-    }
+  }
 }
+
 
 // Create a new chat
 async function createChat(req, res) {
-    try {
-        const chatData = req.body;
-        user = await userService.getUserByUserName(req.username)
+  try {
+    const chatData = req.body;
+    const user = await userService.getUserByUserName(req.username);
 
-        const createdChat = await chatService.createChat(user,chatData.username);
-        res.status(200).json(createdChat);
-    } catch (error) {
-        printError(req, res,error);         
-    }
+    const createdChat = await chatService.createChat(user, chatData.username);
+    res.status(200).json(createdChat);
+  } catch (error) {
+    printError(res, error);
+  }
 }
+
 
 // Get all chats
 async function getAllChatsController(req, res) {
-    try {
-      const chats = await getAllChats();
-      res.json(chats);
-    } catch (error) {
-        printError(error);
+  try {
+    const user = req.headers.user;
+    const chats = await chatService.getAllChats(user);
+    res.json(chats);
+  } catch (error) {
+    if (error.statusCode === 404) {
+      res.sendStatus(404);
     }
+    printError(res, error);
   }
+}
 
 // Get a chat by its ID
 async function getChatById(req, res) {
-    const { id } = req.params.id;
+  const { id } = req.params;
   
     try {
       const chat = await chatService.getChatById(id);
       res.json(chat);
     } catch (error) {
-        printError(error);
+        console.log(error);
+        printError(res, error);
     }
   }
 

@@ -1,14 +1,18 @@
 const mongoose = require('mongoose');
 const User = require('./users');
-const Massage = require('./message');
+const Message = require('./message');
 
 const Schema = mongoose.Schema;
 const ChatSchema = new Schema({
+  id: {
+    type: Number,
+    required: true,
+  },
   users: {
     type: [],
     required: true
   },
-  massages: {
+  messages: {
     type: [],
     required: true
   },

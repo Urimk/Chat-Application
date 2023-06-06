@@ -43,7 +43,6 @@ function ContactsBar({users, user, chats, onChatSelect, onAddChat, chatIdCounter
 
     setPopupVisible(false);
     onAddChat(newChat);
-    console.log(newChat);
   };
 
   const handlePopupToggle = () => {

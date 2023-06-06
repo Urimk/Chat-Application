@@ -9,29 +9,7 @@ function ChatBox({ chat, user, selectedContact, setChat, updateChatMessages, han
   const [chatMessages, setChatMessages] = useState([]);
   const messagesContainerRef = useRef(null);
   const messages = chat ? chat.messages || [] : [];
-  const [socket, setSocket] = useState(null);
-
-  useEffect(() => {
-    const newSocket = io('http://localhost:5000');
-
-    newSocket.on('connect', () => {
-      console.log('Connected to WebSocket server');
-    });
-
-    newSocket.on('message', (data) => {
-      setChatMessages((prevMessages) => [...prevMessages, data]);
-    });
-
-    newSocket.on('disconnect', () => {
-      console.log('Disconnected from WebSocket server');
-    });
-
-    setSocket(newSocket);
-
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
+  
 
   useEffect(() => {
     if (chat) {

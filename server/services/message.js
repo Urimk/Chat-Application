@@ -1,16 +1,15 @@
-Massage = require('../models/message.js')
+Message = require('../models/message.js')
+Chat = require('../models/chat.js');
+User = require('../models/users.js');
 
-const createMassage = async (created,sender,content) =>{
-    const mes = new Massage({created: created,sender: sender,content: content});
-    return await mes.save();
-}
 
 async function getMessagesByChatId(chatId) {
   try {
-    const chat = await Chat.findById(chatId).populate({
+    const chat = await Chat.findOne({ id: chatId }).populate({
         path: 'messages',
         populate: {
           path: 'user',
+          model: User,
           select: 'username',
         },
       });
@@ -18,11 +17,12 @@ async function getMessagesByChatId(chatId) {
       if (!chat) {
         throw new Error('Chat not found');
       }
-  
+
       const filteredMessages = chat.messages.map((message) => {
-        const { _id, created, user, content } = message;
+        const {id, created, user, content } = message;
+        console.log("hi");
         return {
-          id: _id,
+          id: id,
           created,
           sender: { username: user.username },
           content,
@@ -36,18 +36,20 @@ async function getMessagesByChatId(chatId) {
     }
   }
 
-  async function postMessage(chatId, sender, content) {
+  async function postMessage(chatId, senderName, content) {
     try {
-      const chat = await Chat.findById(chatId);
-  
+      const chat = await Chat.findOne({  id: chatId });
       if (!chat) {
         throw new Error('Chat not found');
       }
-  
+      console.log(content);
+      const sender = await User.findOne({ username: senderName });
+      const created = new Date();
       const message = new Message({
-        id: chat.messages.length + 1, // Assign the ID based on the number of existing messages in the chat
-        sender,
-        content,
+        id: chat.messages.length + 1,
+        created: created,
+        sender: sender._id,
+        content: content,
       });
   
       chat.messages.push(message);
@@ -72,4 +74,4 @@ async function getMessagesByChatId(chatId) {
   }
   
 
-module.exports = {createMassage, getMessagesByChatId,postMessage};
+  module.exports = {getMessagesByChatId, postMessage};

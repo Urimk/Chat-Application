@@ -11,17 +11,17 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
   }, []);
 
   async function getLastMessage(chat) {
-    const messages = await getMessages(chat);
-    if (messages && messages.length > 0) {
-      messages.sort((a, b) => b.id - a.id);
-      return messages[0];
+    if (chat && chat.messages && chat.messages.length > 0) {
+      chat.messages.sort((a, b) => b.id - a.id);
+      return chat.messages[0];
     }
     return null;
   }
 
+
   async function handleAddChat() {
   const contact = { username: newContactName };
-    const res = await fetch('http://127.0.0.1:12345/api/Chats', {
+    const res = await fetch('http://localhost:12345/api/Chats', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -34,17 +34,15 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
       alert(res.status + " " + res.statusText + "\n" + errorMessage);
     } else {
       const data = await res.json();
-      const lastMessage = await getLastMessage(data);
-      console.log(lastMessage);
       const newChat = {
         id: data.id,
         user:
         {
-          "username": data.user.username,
-          "displayName": data.user.displayName,
-          "profilePic": data.user.profilePic
+          "username": data.users[0].username,
+          "displayName": data.users[0].displayName,
+          "profilePic": data.users[0].profilePic
         },
-        lastMessage: lastMessage
+        lastMessage: null
       }
       setPopupVisible(false);
       setFetchedChats((prevChats) => [...prevChats, newChat]);
@@ -93,14 +91,18 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
 
   async function getChats() {
     try {
-        const res = await fetch('http://localhost:5000/api/Chats', {
+        const res = await fetch('http://localhost:12345/api/Chats', {
         method: 'get',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `Bearer ${user.token}`,
+          'user': `${user.username}`
         },
       });
       if (res.status != 200){
+        if (res.status == 404) {
+          return;
+        }
         const errorMessage = await res.text();
         alert(res.status + " " + res.statusText + "\n" + errorMessage);
       } else {

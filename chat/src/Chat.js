@@ -49,7 +49,7 @@ function Chat({curUser, setChats, msgIdCounter}) {
         'Authorization': `bearer ${curUser.token}`
       },
     });
-    if (res.status != 204){
+    if (res.status != 200){
       const errorMessage = await res.text();
       alert(res.status + " " + res.statusText + "\n" + errorMessage);
     } else {
@@ -73,21 +73,28 @@ function Chat({curUser, setChats, msgIdCounter}) {
 
   async function getMessages(chat) {
     const id = chat.id;
-    const res = await fetch(`http://localhost:12345/api/Chats/${id}/Messages`, {
-      method: 'get',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'bearer '  + curUser.token
-      },
-    });
-    if (res.status != 200){
-      const errorMessage = await res.text();
-      alert(res.status + " " + res.statusText + "\n" + errorMessage);
-    } else {
+    try {
+      const res = await fetch(`http://localhost:12345/api/Chats/${id}/Messages`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${curUser.token}`
+        },
+      });
+  
+      if (!res.ok) {
+        const errorMessage = await res.text();
+        alert(res.status + " " + res.statusText + "\n" + errorMessage);
+      } else {
       const data = await res.json();
-      return(data);
+      return data;
+      }
+    } catch (error) {
+      console.error('Failed to fetch messages:', error);
+      throw error;
     }
   }
+  
 
   return (
     <>

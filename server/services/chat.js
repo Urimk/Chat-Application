@@ -1,14 +1,17 @@
-Chat = require('../models/chat');
-User = require('../models/users');
+Chat = require('../models/chat.js');
+User = require('../models/users.js');
 
 async function createChat(user ,username) {
   try {
-    // Assuming you have a User model and want to create a chat between the current user and another user
-    const otherUser = await User.findOne({ username: username });
+    const otherUser = await User.findOne({ username: username }, 'username displayName profilePic');
     if (!otherUser) {
       throw new Error('User not found');
     }
-
+    if (user.username === otherUser.username) {
+      const error = new Error("Thou shalt not talk with thyself");
+      error.statusCode = 400;
+      throw error;
+    }
     const lastChat = await Chat.findOne().sort({ id: -1 }).limit(1);
     let nextId = 1;
     if (lastChat) {
@@ -17,54 +20,54 @@ async function createChat(user ,username) {
 
     const newChat = new Chat({
       id: nextId,
-      users: [otherUser, user], // Add the current user to the chat
-      messages: [], // Initialize messages as an empty array
+      users: [otherUser, user],
+      messages: [],
     });
-
     const savedChat = await newChat.save();
-// Perform the filtering
-const { id, users } = savedChat;
-const filteredChat = { id, users: users.find(u => u._id.toString() !== user._id.toString()) };
-
-
-    return savedChat;
+    const { id, users } = savedChat;
+    const filteredChat = { id, users };
+    return filteredChat;
   } catch (error) {
-    throw new Error('Failed to create chat');
+    throw new Error(error);
   }
 }
 
-async function getAllChats() {
-    try {
-      const chats = await Chat.find()
-        .populate('users', 'username') // Populate the 'users' field in Chat with only 'username'
-        .populate({
-          path: 'messages',
-          options: { sort: { id: -1 }, limit: 1 }, // Sort messages in descending order of id and limit to 1
-          populate: { path: 'user', select: 'username' }, // Populate the 'user' field in Message with only 'username'
-        })
-        .exec();
-  
-      // Extract the necessary data for each chat
-      const formattedChats = chats.map((chat) => {
-        const otherUser = chat.users.find((u) => u.username !== user.username);
-        const lastMessage = chat.messages[0];
-  
-        return {
-          id: chat.id,
-          otherUser,
-          lastMessage,
-        };
-      });
-  
-      return formattedChats;
-    } catch (error) {
-      throw new Error('Failed to retrieve chats');
-    }
+async function getAllChats(user) {
+  try {
+    const chats = await Chat.find({
+      users: {
+        $elemMatch: {
+          username: user
+        }
+      }
+    })
+      .populate('users', 'username')
+      .populate({
+        path: 'messages',
+        options: { sort: { id: -1 }, limit: 1 },
+        populate: { path: 'user', select: 'username' }, 
+      })
+      .exec();
+    const formattedChats = chats.map((chat) => {
+      const otherUser = chat.users.find((u) => u.username !== user.username);
+      const lastMessage = chat.messages.length > 0 ? chat.messages.length[0] : null;
+
+      return {
+        id: chat.id,
+        user: otherUser,
+        lastMessage,
+      };
+    });
+    return formattedChats;
+  } catch (error) {
+    throw new Error(error);
   }
+}
+
 
   async function getChatById(id) {
     try {
-      const chat = await Chat.findById(id);
+      const chat = await Chat.findOne({ id });
   
       if (!chat) {
         throw new Error('Chat not found');
@@ -91,7 +94,7 @@ const getChatsByUser = async (username) => {
 
 const deleteChat = async (id) => {
   try {
-    const deletedChat = await Chat.findByIdAndRemove(id);
+    const deletedChat = await Chat.findOneAndRemove({ id: id });
     return deletedChat;
   } catch (error) {
     console.error('Failed to delete chat:', error);

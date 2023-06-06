@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 const User = require('./users');
 const Schema = mongoose.Schema
-const Massage = new Schema({
+const Message = new Schema({
+    id: {
+        type: Number,
+        required: true,
+      },
     created: {
         type: String
     },
@@ -14,4 +18,4 @@ const Massage = new Schema({
         required: true 
     }
 }); 
-module.exports = mongoose.model('Massage',Massage);
+module.exports = mongoose.model('Message',Message);

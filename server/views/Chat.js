@@ -13,8 +13,6 @@ function Chat({ users, curUser, chats, setChats, msgIdCounter, chatIdCounter}) {
   const navigate = useNavigate();
 
   const handleContactSelect = (chat) => {
-    console.log(chat);
-    setCurChat(chat);
     const contact = curUser.username === chat.users[0].username ?
     chat.users[1] : chat.users[0];
     setselectedContact(contact);

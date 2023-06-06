@@ -1,45 +1,39 @@
 
-messageService = require('../services/message')
+MessageService = require('../services/message.js');
 
-function printError(error) {
+function printError(res, error) {
     if (error.statusCode === 500) {
         res.status(500).json({ error: 'Internal Server Error' });
     } else if (error.statusCode === 401) {
-    res.status(401).json({ error: 'Unauthorized' });
+        res.status(401).json({ error: 'Unauthorized' });
     } else {
-    res.status(404).json({ error: error.message });
+        res.status(404).json({ error: error.message });
     }
 }
 
-const createMassage = async(req,res) =>{
-    res.json(await messageService.createMassage(req.body.created,req.body.sender,
-        req.body.content));
-}
-
 async function getMessagesByChatId(req, res) {
-    const { chatId } = req.params;
-  
+    const chatId = req.params.id;
     try {
       const messages = await MessageService.getMessagesByChatId(chatId);
       res.json(messages);
     } catch (error) {
-        printError(error);         
+        printError(res, error);         
     }
 }
 
 async function postMessage(req, res) {
-    const { chatId, sender, content } = req.body;
-  
+    const chatId = req.params.id;
+    const username = req.headers.user;
+    const content = req.body.content;
     try {
-      const message = await MessageService.postMessage(chatId, sender, content);
+      const message = await MessageService.postMessage(chatId, username, content);
       res.json(message);
     } catch (error) {
-        printError(error);         
+        printError(res, error);         
     }
   }
 
-module.exports = {
-    createMassage,
+  module.exports = {
     getMessagesByChatId,
     postMessage
 };
