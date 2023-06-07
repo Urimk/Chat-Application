@@ -20,7 +20,17 @@ async function createChat(req, res) {
     const user = await userService.getUserByUserName(req.username);
 
     const createdChat = await chatService.createChat(user, chatData.username);
-    res.status(200).json(createdChat);
+    const otherUser = createdChat.users[0];
+    res.status(200).json(
+      {
+        "id" :  createdChat.id,
+        "user" : {
+        "username" : otherUser.username,
+        "displayName": otherUser.displayName,
+        "profilePic": otherUser.profilePic
+        }
+        }
+    );
   } catch (error) {
     printError(res, error);
   }

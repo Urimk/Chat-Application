@@ -1,31 +1,24 @@
 Message = require('../models/message.js')
-Chat = require('../models/chat.js');
+chatService = require('../services/chat.js');
 User = require('../models/users.js');
+userService = require('../services/users.js')
 
 
 async function getMessagesByChatId(chatId) {
   try {
-    const chat = await Chat.findOne({ _id: chatId }).populate({
-        path: 'messages',
-        populate: {
-          path: 'user',
-          model: User,
-          select: 'username',
-        },
-      });
+    const chat = await chatService.getChatById(chatId);
   
       if (!chat) {
         throw new Error('Chat not found');
       }
 
       const filteredMessages = chat.messages.map((message) => {
-        const {id, created, user, content } = message;
-        console.log("hi");
+        const {id, created, sender, content } = message;
         return {
           id: id,
-          created,
-          sender: { username: user.username },
-          content,
+          created: created,
+          sender: sender,
+          content: content,
         };
       });
   
@@ -38,35 +31,23 @@ async function getMessagesByChatId(chatId) {
 
   async function postMessage(chatId, senderName, content) {
     try {
-      const chat = await Chat.findOne({  id: chatId });
-      if (!chat) {
-        throw new Error('Chat not found');
-      }
-      console.log(content);
-      const sender = await User.findOne({ username: senderName });
+      const sender = await userService.getUserByUserName(senderName);
       const created = new Date();
-      const message = new Message({
-        id: chat.messages.length + 1,
+      const tempMes = new Message({
         created: created,
-        sender: sender._id,
+        sender: sender.id,
         content: content,
       });
-  
-      chat.messages.push(message);
-      await chat.save();
-  
-      const formattedMessage = {
-        id: message.id,
-        created: message.created,
-        sender: {
-          username: sender.username,
-          displayName: sender.displayName,
-          profilePic: sender.profilePic,
-        },
-        content: message.content,
+
+      const message = {
+        id: tempMes._id.toString(),
+        created: tempMes.created,
+        sender: tempMes.sender.id,
+        content: tempMes.content
       };
-  
-      return formattedMessage;
+
+      chatService.addMessage(chatId,message);
+      return message;
     } catch (error) {
       console.error('Failed to post message:', error);
       throw error;

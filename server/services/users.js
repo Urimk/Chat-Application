@@ -17,6 +17,7 @@ const createUser = async (username, password, displayName, profilePic) => {
       return null;
     }
     return {
+      id: user._id.toString(),
       username: user.username,
       displayName: user.displayName,
       profilePic: user.profilePic,

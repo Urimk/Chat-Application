@@ -1,9 +1,9 @@
 Chat = require('../models/chat.js');
-User = require('../models/users.js');
+userService = require('../services/users.js');
 
-async function createChat(user ,username) {
+async function createChat(user ,other) {
   try {
-    const otherUser = await User.findOne({ username: username }, 'username displayName profilePic');
+    const otherUser = await userService.getUserByUserName(other);
     if (!otherUser) {
       throw new Error('User not found');
     }
@@ -18,7 +18,7 @@ async function createChat(user ,username) {
       messages: [],
     });
     const savedChat = await newChat.save();
-    const id = savedChat._id;
+    const id = savedChat._id.toString();
     const users = savedChat.users
     const filteredChat = { id, users };
     return filteredChat;
@@ -62,13 +62,17 @@ async function getAllChats(user) {
 
   async function getChatById(id) {
     try {
-      const chat = await Chat.findOne({ id });
+      const chat = await Chat.findOne({ _id: id });
   
       if (!chat) {
         throw new Error('Chat not found');
       }
   
-      return chat;
+      return {
+        id: chat._id.toString(),
+        users: chat.users,
+        messages: chat.messages
+      };
     } catch (error) {
       throw new Error('Failed to retrieve chat');
     }
@@ -81,6 +85,22 @@ const getChatsByUser = async (username) => {
     });
 
     return chats;
+  } catch (error) {
+    console.error('Failed to get chats:', error);
+    throw error;
+  }
+};
+
+const addMessage = async (chatId,msg) => {
+  try {
+    const chat = await Chat.findById(chatId);
+    chat.messages.push(msg);
+    await chat.save();
+    return {
+      id: chat._id.toString(),
+      users: chat.users,
+      messages: chat.messages
+    };
   } catch (error) {
     console.error('Failed to get chats:', error);
     throw error;
@@ -102,5 +122,6 @@ module.exports = {
   getChatsByUser,
   deleteChat,
   getAllChats,
-  getChatById
+  getChatById,
+  addMessage
 };

@@ -2,10 +2,6 @@ const mongoose = require('mongoose');
 const User = require('./users');
 const Schema = mongoose.Schema
 const Message = new Schema({
-    id: {
-        type: Number,
-        required: true,
-      },
     created: {
         type: String
     },
