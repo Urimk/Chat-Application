@@ -24,7 +24,7 @@ async function getMessagesByChatId(req, res) {
 async function postMessage(req, res) {
     const chatId = req.params.id;
     const username = req.username;
-    const content = req.body.content;
+    const content = req.body.msg.toString();
     try {
       const message = await MessageService.postMessage(chatId, username, content);
       res.json(message);
