@@ -5,6 +5,48 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [newContactName, setNewContactName] = useState("");
   const overlayRef = useRef(null);
+  const socket = useRef(null);
+  const addChatTriggered = useRef(false);
+
+
+  useEffect(() => {
+    socket.current = new WebSocket("ws://localhost:5000");
+
+    socket.current.addEventListener("open", () => {
+      console.log("WebSocket connection established");
+    });
+
+    socket.current.addEventListener("message", (event) => {
+      const data = JSON.parse(event.data);
+      if (data.event === "chatAdded" && !addChatTriggered.current) {
+        const existingChat = fetchedChats.find((chat) => chat.id === data.id);
+        if (existingChat) {
+          return;
+        }
+        const chat = data.data.chat;
+        console.log(chat);
+        const otherUser = chat.users.find((u) => u.username !== user);
+        console.log(otherUser);
+        const newChat = {
+          id: chat.id,
+          user: {
+            username: otherUser.username,
+            displayName: otherUser.displayName,
+            profilePic: otherUser.profilePic
+          },
+          lastMessage: null
+        };
+
+        setFetchedChats((prevChats) => [...prevChats, newChat]);
+        onAddChat(newChat);
+      }
+    });
+
+    return () => {
+      socket.current.close();
+    };
+  }, []);
+
 
   useEffect(() => {
     getChats();
@@ -20,6 +62,7 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
   }
 
   async function handleAddChat() {
+  addChatTriggered.current = true;
   const contact = { username: newContactName };
     const res = await fetch('http://localhost:5000/api/Chats', {
       method: 'post',
@@ -50,6 +93,7 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
       setFetchedChats((prevChats) => [...prevChats, newChat]);
       onAddChat(newChat);
     };
+    addChatTriggered.current = false;
   }
 
   async function handleChatClick(clickedChat) {

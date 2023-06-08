@@ -4,12 +4,34 @@ import ChatButtons from "./ChatButtons.js";
 import Message from "./Message.js";
 import SendMessage from "./SendMessage.js";
 
-
-function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, handleDeleteChat, updateLastMessage, getMessages}) {
+function ChatBox({ chat, user, selectedContact, setChat, updateChatMessages, handleDeleteChat, updateLastMessage, getMessages }) {
   const [chatMessages, setChatMessages] = useState([]);
   const messagesContainerRef = useRef(null);
   const messages = chat ? chat.messages || [] : [];
+  const socket = useRef(null);
 
+  useEffect(() => {
+    socket.current = new WebSocket("ws://localhost:5000");
+
+    socket.current.addEventListener("open", () => {
+      console.log("WebSocket connection established");
+    });
+
+    socket.current.addEventListener("message", (event) => {
+      const data = JSON.parse(event.data);
+      if (data.event === "chatModified") {
+        const updatedChatId = data.data.updatedChat.id;
+        const updatedChatMessages = data.data.updatedChat.messages;
+        setChatMessages(updatedChatMessages);
+        updateChatMessages(updatedChatId, updatedChatMessages);
+      }
+    });
+
+    return () => {
+      socket.current.close();
+    };
+  }, []);
+  
   useEffect(() => {
     if (chat) {
       getMessages(chat)
