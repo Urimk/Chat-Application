@@ -16,12 +16,7 @@ const createUser = async (username, password, displayName, profilePic) => {
     if (!user) {
       return null;
     }
-    return {
-      id: user._id.toString(),
-      username: user.username,
-      displayName: user.displayName,
-      profilePic: user.profilePic,
-    };
+    return user;
   };
 
 const checkUser = async(username,password) => {
