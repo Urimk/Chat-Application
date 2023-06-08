@@ -31,20 +31,13 @@ async function getMessagesByChatId(chatId) {
 
   async function postMessage(chatId, senderName, content) {
     try {
-      const senderData = await userService.getUserByUserName(senderName);
-      const sender = {
-        username: senderData.username,
-        displayName: senderData.displayName,
-        profilePic: senderData.profilePic,
-      };
-      console.log(sender);
+      const sender = await userService.getUserByUserName(senderName);
       const created = new Date();
       const tempMes = new Message({
         created: created,
         sender: sender,
         content: content
       });
-      console.log(tempMes);
 
       const message = {
         id: tempMes._id.toString(),
