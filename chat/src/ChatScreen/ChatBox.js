@@ -93,6 +93,7 @@ function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, hand
       <ChatButtons chat={chat} handleDeleteChat={handleDeleteChat}/>
       <div id="messages" ref={messagesContainerRef}>
       {messages.slice().reverse().map((message, index) => {
+
         const incoming = message.sender.username === user.username ? 0 : 1;
         return (
             <Message

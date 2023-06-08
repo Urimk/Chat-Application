@@ -35,7 +35,6 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
     } else {
       const data = await res.json();
       const lastMessage = await getLastMessage(data);
-      console.log(lastMessage);
       const newChat = {
         id: data.id,
         user:
@@ -107,7 +106,8 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
         const data = await res.json();
         const updatedChats = [];
         for (const chat of data) {
-          const lastMessage = await getLastMessage(chat);
+          const lastMessage = chat.lastMessage;
+
           const updatedChat = {
             ...chat,
             lastMessage: lastMessage,
