@@ -5,7 +5,7 @@ import Image from './image/Image.js';
 import Username from './userName/Username.js';
 import { Link, useNavigate } from 'react-router-dom';
 
-function Sign({ }) {
+function Sign({ users, setUsers }) {
   const navigate = useNavigate();
   const [isNameReady, setIsNameReady] = useState(null);
   const [isPasswordReady, setIsPasswordReady] = useState(null);
@@ -25,7 +25,7 @@ function Sign({ }) {
         displayName: display,
         profilePic: picture
       };
-      const res = await fetch('http://localhost:12345/api/Users', {
+      const res = await fetch('http://localhost:5000/api/Users', {
 method: 'post', // send a post request
 headers: {
 'Content-Type': 'application/json', // the data (username/password) is in the form of a JSON object

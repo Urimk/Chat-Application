@@ -21,7 +21,9 @@ mongoose
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-
+app.use("/",express.static('public'));
+app.use("/chat",express.static('public'));
+app.use("/login",express.static('public'));
 app.use('/api/Users', users);
 app.use('/api/Tokens', token);
 app.use('/api/Chats', chat);

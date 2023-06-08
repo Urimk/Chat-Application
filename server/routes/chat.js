@@ -5,7 +5,7 @@ const messageController = require('../controllers/message.js');
 
 const chat = express.Router();
 
-chat.get('/',userController.isLoggedIn,chatController.getAllChatsController);
+chat.get('/',userController.isLoggedIn,chatController.getAllChats);
 chat.get('/:id',userController.isLoggedIn,chatController.getChatById);
 chat.post('/', userController.isLoggedIn,chatController.createChat);
 chat.delete('/:id',userController.isLoggedIn,chatController.deleteChat);

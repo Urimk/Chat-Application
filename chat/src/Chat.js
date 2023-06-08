@@ -37,19 +37,20 @@ function Chat({curUser, setChats, msgIdCounter}) {
 
   function handleLogOut(event) {
     event.preventDefault();
+    curUser.registered = "no"
     navigate('/login');
   }
 
   async function handleDeleteChat(chat) {
     const id = chat.id
-    const res = await fetch(`http://localhost:12345/api/Chats/${id}`, {
+    const res = await fetch(`http://localhost:5000/api/Chats/${id}`, {
       method: 'delete',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `bearer ${curUser.token}`
+        'Authorization': `Bearer ${curUser.token}`
       },
     });
-    if (res.status != 200){
+    if (res.status != 204){
       const errorMessage = await res.text();
       alert(res.status + " " + res.statusText + "\n" + errorMessage);
     } else {
@@ -73,28 +74,21 @@ function Chat({curUser, setChats, msgIdCounter}) {
 
   async function getMessages(chat) {
     const id = chat.id;
-    try {
-      const res = await fetch(`http://localhost:12345/api/Chats/${id}/Messages`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${curUser.token}`
-        },
-      });
-  
-      if (!res.ok) {
-        const errorMessage = await res.text();
-        alert(res.status + " " + res.statusText + "\n" + errorMessage);
-      } else {
+    const res = await fetch(`http://localhost:5000/api/Chats/${id}/Messages`, {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${curUser.token}`
+      },
+    });
+    if (res.status != 200){
+      const errorMessage = await res.text();
+      alert(res.status + " " + res.statusText + "\n" + errorMessage);
+    } else {
       const data = await res.json();
-      return data;
-      }
-    } catch (error) {
-      console.error('Failed to fetch messages:', error);
-      throw error;
+      return(data);
     }
   }
-  
 
   return (
     <>

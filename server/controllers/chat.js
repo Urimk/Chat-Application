@@ -17,7 +17,15 @@ function printError(res, error) {
 async function createChat(req, res) {
   try {
     const chatData = req.body;
+    //search if they have already chat:
+    result = await chatService.getChatsByUsers(req.username,chatData.username);
+    if(result){
+      res.status(409).json("There is already chat whith this contact")
+      return;
+    }
     const user = await userService.getUserByUserName(req.username);
+
+    
 
     const createdChat = await chatService.createChat(user, chatData.username);
     const otherUser = createdChat.users[0];
@@ -38,9 +46,9 @@ async function createChat(req, res) {
 
 
 // Get all chats
-async function getAllChatsController(req, res) {
+async function getAllChats(req, res) {
   try {
-    const user = req.headers.user;
+    const user = req.username;
     const chats = await chatService.getAllChats(user);
     res.json(chats);
   } catch (error) {
@@ -87,7 +95,7 @@ async function deleteChat(req, res) {
     if (!deletedChat) {
       return res.status(404).json({ error: 'Chat not found' });
     }
-    res.json(deletedChat);
+    res.status(204).json(deletedChat);
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete chat' });
   }
@@ -97,7 +105,7 @@ async function deleteChat(req, res) {
 
 module.exports = {
   createChat,
-  getAllChatsController,
+  getAllChats,
   getChatById,
   updateChat,
   deleteChat, }

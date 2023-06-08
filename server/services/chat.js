@@ -91,6 +91,21 @@ const getChatsByUser = async (username) => {
   }
 };
 
+const getChatsByUsers = async (username1, username2) => {
+  const chats = await Chat.find({
+    "users.username": {
+      $all: [username1, username2]
+    }
+  });
+
+  if (chats.length === 0) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+
 const addMessage = async (chatId,msg) => {
   try {
     const chat = await Chat.findById(chatId);
@@ -109,7 +124,7 @@ const addMessage = async (chatId,msg) => {
 
 const deleteChat = async (id) => {
   try {
-    const deletedChat = await Chat.findOneAndRemove({ id: id });
+    const deletedChat = await Chat.findOneAndRemove({ _id: id });
     return deletedChat;
   } catch (error) {
     console.error('Failed to delete chat:', error);
@@ -123,5 +138,6 @@ module.exports = {
   deleteChat,
   getAllChats,
   getChatById,
-  addMessage
+  addMessage,
+  getChatsByUsers
 };
