@@ -17,6 +17,10 @@ function printError(res, error) {
 async function createChat(req, res) {
   try {
     const chatData = req.body;
+    if(req.username === chatData.username){
+      res.status(400).json("User can't creat chat with himself")
+      return;
+    }
     //search if they have already chat:
     result = await chatService.getChatsByUsers(req.username,chatData.username);
     if(result){

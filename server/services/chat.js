@@ -7,11 +7,6 @@ async function createChat(user ,other) {
     if (!otherUser) {
       throw new Error('User not found');
     }
-    if (user.username === otherUser.username) {
-      const error = new Error("Thou shalt not talk with thyself");
-      error.statusCode = 400;
-      throw error;
-    }
 
     const newChat = new Chat({
       users: [otherUser, user],
