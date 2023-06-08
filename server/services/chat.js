@@ -39,13 +39,13 @@ async function getAllChats(user) {
       })
       .exec();
     const formattedChats = chats.map((chat) => {
-      const otherUser = chat.users.find((u) => u.username !== user.username);
-      const lastMessage = chat.messages.length > 0 ? chat.messages.length[0] : null;
+      const otherUser = chat.users.find((u) => u.username !== user);
+      const lastMessage = chat.messages.length > 0 ? chat.messages[chat.messages.length - 1] : null;
 
       return {
         id: chat.id,
         user: otherUser,
-        lastMessage,
+        lastMessage: lastMessage
       };
     });
     return formattedChats;

@@ -24,7 +24,7 @@ async function createChat(req, res) {
     //search if they have already chat:
     result = await chatService.getChatsByUsers(req.username,chatData.username);
     if(result){
-      res.status(409).json("There is already chat whith this contact")
+      res.status(409).json("There is already a chat with this contact")
       return;
     }
     const user = await userService.getUserByUserName(req.username);
