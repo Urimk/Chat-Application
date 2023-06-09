@@ -111,6 +111,7 @@ async function updateChat(req, res) {
 async function deleteChat(req, res) {
   try {
     const chatId = req.params.id;
+    const username = req.username;
     const deletedChat = await chatService.deleteChat(chatId);
     if (!deletedChat) {
       return res.status(404).json({ error: 'Chat not found' });
@@ -118,7 +119,7 @@ async function deleteChat(req, res) {
 
     // Send a WebSocket message to notify clients
     wss.clients.forEach((client) => {
-      client.send(JSON.stringify({ event: 'chatRemoved', data: { deletedChat } }));
+      client.send(JSON.stringify({ event: 'chatRemoved', data: { deletedChat , username } }));
     });
 
     res.status(204).json(deletedChat);

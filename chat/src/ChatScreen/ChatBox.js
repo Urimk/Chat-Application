@@ -17,7 +17,7 @@ function ChatBox({ chat, user, selectedContact,setSelectedContact, setChat, upda
       console.log("WebSocket connection established");
     });
 
-    socket.current.addEventListener("message", (event) => {
+    socket.current.addEventListener("message", async (event) => {
       const data = JSON.parse(event.data);
       if (data.event === "chatModified"&&
       data.data.updatedChat.users.find((u) => u.username === user.username)) {
@@ -27,22 +27,18 @@ function ChatBox({ chat, user, selectedContact,setSelectedContact, setChat, upda
         updateChatMessages(updatedChatId, updatedChatMessages);
         messages = updatedChatMessages;
       } 
-      /*
       else if(data.event === "chatRemoved"&&
-      data.data.deletedChat.users.find((u) => u.username === user.username)) {
-        const deletedChat = data.data.deletedChat;
-        if(deletedChat === chat){
-          setChat(null);
+      data.data.deletedChat.users.find((u) => u.username === selectedContact.username)) {
           setSelectedContact(null)
+          messages = []
         }
-      }
-      */
+      
     });
 
     return () => {
       socket.current.close();
     };
-  }, []);
+  }, [selectedContact,setSelectedContact,messages]);
   
   useEffect(() => {
     if (chat) {

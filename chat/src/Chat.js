@@ -24,10 +24,10 @@ function Chat({ curUser, setChats, msgIdCounter }) {
         if (data.event === 'chatRemoved') {
           const deletedChatId = data.data.deletedChat._id;
           setFetchedChats((prevChats) => prevChats.filter((c) => c.id !== deletedChatId));
-          if (curChat && curChat.id === deletedChatId) {
-            setChatRemove(false)
-            handleDeleteChat(data.data.deletedChat)
+          if(data.data.deletedChat.users.find((u)=> u.username === selectedContact) ){
+            selectedContact(null)
           }
+          
         }
       });
 
@@ -68,23 +68,22 @@ function Chat({ curUser, setChats, msgIdCounter }) {
 
   async function handleDeleteChat(chat) {
     const id = chat.id
-    if(chatRemove){
     const res = await fetch(`http://localhost:5000/api/Chats/${id}`, {
       method: 'delete',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${curUser.token}`
       },
-    });
+    })
     if (res.status != 204){
       const errorMessage = await res.text();
       alert(res.status + " " + res.statusText + "\n" + errorMessage);
       return;
-    }
-      
-    }
+    }else{
       setFetchedChats(prevChats => prevChats.filter(c => c.id !== id));
       setSelectedContact(null);
+      setCurChat(null)
+    }
     
   }
 
