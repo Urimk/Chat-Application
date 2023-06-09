@@ -13,10 +13,6 @@ function ChatBox({ chat, user, selectedContact, setChat, updateChatMessages, han
   useEffect(() => {
     socket.current = new WebSocket("ws://localhost:5000");
 
-    socket.current.addEventListener("open", () => {
-      console.log("WebSocket connection established");
-    });
-
     socket.current.addEventListener("message", (event) => {
       const data = JSON.parse(event.data);
       if (data.event === "chatModified") {
