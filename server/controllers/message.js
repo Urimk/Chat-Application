@@ -29,7 +29,7 @@ async function postMessage(req, res) {
     const content = req.body.msg.toString();
     try {
       const message = await MessageService.postMessage(chatId, username, content);
-      chatController.modifyChatsSocket();
+      chatController.modifyChatsSocket(chatId);
       res.json(message);
       
     } catch (error) {

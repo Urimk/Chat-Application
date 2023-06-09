@@ -127,7 +127,8 @@ async function deleteChat(req, res) {
   }
 }
 
-function modifyChatsSocket(){
+async function modifyChatsSocket(chatId){
+  let updatedChat = await chatService.getChatById(chatId);
   // Send a WebSocket message to notify clients
   wss.clients.forEach((client) => {
     client.send(JSON.stringify({ event: 'chatModified', data: { chatId, updatedChat } }));

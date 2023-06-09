@@ -83,10 +83,9 @@ function Chat({ curUser, setChats, msgIdCounter }) {
     }
       
     }
-     else {
       setFetchedChats(prevChats => prevChats.filter(c => c.id !== id));
       setSelectedContact(null);
-    }
+    
   }
 
   async function updateLastMessage(updatedChat) {
