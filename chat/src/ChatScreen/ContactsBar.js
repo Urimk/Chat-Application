@@ -38,7 +38,7 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
 
         setFetchedChats((prevChats) => [...prevChats, newChat]);
         onAddChat(newChat);
-      }else if( data.event === "chatModified"){
+      }else if( data.event === "chatModified" || data.event === "chatRemoved"){
         getChats();
       }
     });
