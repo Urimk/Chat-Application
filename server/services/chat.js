@@ -43,7 +43,7 @@ async function getAllChats(user) {
       const lastMessage = chat.messages.length > 0 ? chat.messages[chat.messages.length - 1] : null;
 
       return {
-        id: chat.id,
+        id: chat.id.toString();,
         user: otherUser,
         lastMessage: lastMessage
       };
@@ -121,7 +121,7 @@ const deleteChat = async (id) => {
   try {
     const deletedChat = await Chat.findOneAndRemove({ _id: id });
     return {
-      id: deletedChat._id,
+      id: deletedChat._id.toString();,
       users: deletedChat.users,
       messages: deletedChat.messages
     }
