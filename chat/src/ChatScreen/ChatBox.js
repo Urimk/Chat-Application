@@ -4,7 +4,7 @@ import ChatButtons from "./ChatButtons.js";
 import Message from "./Message.js";
 import SendMessage from "./SendMessage.js";
 
-function ChatBox({ chat, user, selectedContact, setChat, updateChatMessages, handleDeleteChat, updateLastMessage, getMessages }) {
+function ChatBox({ chat, user, selectedContact, setChat, updateChatMessages, handleDeleteChat, updateLastMessage, getMessages}) {
   const [chatMessages, setChatMessages] = useState([]);
   const messagesContainerRef = useRef(null);
   const messages = chat ? chat.messages || [] : [];
@@ -108,7 +108,9 @@ function ChatBox({ chat, user, selectedContact, setChat, updateChatMessages, han
           <span className="username">{selectedContact.displayName}</span>
         </>
       )}
-      <ChatButtons chat={chat} handleDeleteChat={handleDeleteChat}/>
+      <ChatButtons chat={chat} handleDeleteChat={
+        handleDeleteChat
+      }/>
       <div id="messages" ref={messagesContainerRef}>
       {messages.slice().reverse().map((message, index) => {
 

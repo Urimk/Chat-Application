@@ -24,9 +24,7 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
           return;
         }
         const chat = data.data.chat;
-        console.log(chat);
         const otherUser = chat.users.find((u) => u.username !== user);
-        console.log(otherUser);
         const newChat = {
           id: chat.id,
           user: {
@@ -39,6 +37,8 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
 
         setFetchedChats((prevChats) => [...prevChats, newChat]);
         onAddChat(newChat);
+      }else if(data.event === "chatRemoved" || data.event === "chatModified"){
+        getChats();
       }
     });
 

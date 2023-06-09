@@ -12,6 +12,7 @@ function Chat({ curUser, setChats, msgIdCounter }) {
   const [fetchedChats, setFetchedChats] = useState([]);
   const navigate = useNavigate();
   const [socket, setSocket] = useState(null);
+  const [chatRemove, setChatRemove] = useState(true);
 
   useEffect(() => {
     const newSocket = new WebSocket('ws://localhost:5000'); 
@@ -21,10 +22,11 @@ function Chat({ curUser, setChats, msgIdCounter }) {
       newSocket.addEventListener('message', (event) => {
         const data = JSON.parse(event.data);
         if (data.event === 'chatRemoved') {
-          const deletedChatId = data.data.deletedChat.id;
+          const deletedChatId = data.data.deletedChat._id;
           setFetchedChats((prevChats) => prevChats.filter((c) => c.id !== deletedChatId));
           if (curChat && curChat.id === deletedChatId) {
-            setSelectedContact(null);
+            setChatRemove(false)
+            handleDeleteChat(data.data.deletedChat)
           }
         }
       });
@@ -66,6 +68,7 @@ function Chat({ curUser, setChats, msgIdCounter }) {
 
   async function handleDeleteChat(chat) {
     const id = chat.id
+    if(chatRemove){
     const res = await fetch(`http://localhost:5000/api/Chats/${id}`, {
       method: 'delete',
       headers: {
@@ -76,7 +79,11 @@ function Chat({ curUser, setChats, msgIdCounter }) {
     if (res.status != 204){
       const errorMessage = await res.text();
       alert(res.status + " " + res.statusText + "\n" + errorMessage);
-    } else {
+      return;
+    }
+      
+    }
+     else {
       setFetchedChats(prevChats => prevChats.filter(c => c.id !== id));
       setSelectedContact(null);
     }

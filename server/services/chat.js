@@ -120,11 +120,11 @@ const addMessage = async (chatId,msg) => {
 const deleteChat = async (id) => {
   try {
     const deletedChat = await Chat.findOneAndRemove({ _id: id });
-    return {
-      id: deletedChat._id,
-      users: deletedChat.users,
-      messages: deletedChat.messages
+    if(deletedChat != null){
+      deletedChat.id = deletedChat._id.toString()
     }
+    
+    return deletedChat;
   } catch (error) {
     console.error('Failed to delete chat:', error);
     throw error;
