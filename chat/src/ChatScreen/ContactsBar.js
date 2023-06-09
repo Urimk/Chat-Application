@@ -18,12 +18,13 @@ function ContactsBar({ user, onChatSelect, onAddChat, fetchedChats, setFetchedCh
 
     socket.current.addEventListener("message", (event) => {
       const data = JSON.parse(event.data);
-      if (data.event === "chatAdded" && !addChatTriggered.current) {
-        const existingChat = fetchedChats.find((chat) => chat.id === data.id);
+      const chat = data.data.chat;
+      if (data.event === "chatAdded" && !addChatTriggered.current &&
+       chat.users.find((u) => u.username === user.username)) {
+        const existingChat = fetchedChats.find((c) => c.id === chat.id);
         if (existingChat) {
           return;
         }
-        const chat = data.data.chat;
         const otherUser = chat.users.find((u) => u.username !== user);
         const newChat = {
           id: chat.id,

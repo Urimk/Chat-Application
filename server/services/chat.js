@@ -43,7 +43,7 @@ async function getAllChats(user) {
       const lastMessage = chat.messages.length > 0 ? chat.messages[chat.messages.length - 1] : null;
 
       return {
-        id: chat.id.toString();,
+        id: chat.id.toString(),
         user: otherUser,
         lastMessage: lastMessage
       };

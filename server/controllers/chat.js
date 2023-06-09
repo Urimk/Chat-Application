@@ -127,6 +127,13 @@ async function deleteChat(req, res) {
   }
 }
 
+function modifyChatsSocket(){
+  // Send a WebSocket message to notify clients
+  wss.clients.forEach((client) => {
+    client.send(JSON.stringify({ event: 'chatModified', data: { chatId, updatedChat } }));
+  });
+}
+
 module.exports = {
   createChat,
   getAllChats,
@@ -135,4 +142,5 @@ module.exports = {
   deleteChat,
   handleWebSocketConnection,
   wss,
+  modifyChatsSocket
 };
