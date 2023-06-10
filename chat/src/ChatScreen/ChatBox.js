@@ -100,7 +100,14 @@ function ChatBox({ chat, user, selectedContact, setChat, updateChatMessages, han
 
   return (
     <div id="chat_window">
-      {/* ... */}
+      {selectedContact && (
+        <>
+
+          <ProfilePic pic={selectedContact.profilePic}/>
+          <span className="username">{selectedContact.displayName}</span>
+        </>
+      )}
+      <ChatButtons chat={chat} handleDeleteChat={handleDeleteChat}/>
       <div id="messages" ref={messagesContainerRef}>
         {chatMessages.slice().reverse().map((message, index) => {
           const incoming = message.sender.username === user.username ? 0 : 1;
