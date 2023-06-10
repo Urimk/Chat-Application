@@ -20,8 +20,6 @@ function ChatBox({ chat, user, selectedContact, setChat, updateChatMessages, han
       const data = JSON.parse(event.data);
       console.log(selectedContact);
       if (data.event === "chatModified" && chat && data.data.updatedChat.id === chat.id) {
-        console.log(chat);
-        console.log("hi");
         const updatedChatId = data.data.updatedChat.id;
         const updatedChatMessages = data.data.updatedChat.messages;
         setChatMessages(updatedChatMessages);
