@@ -49,8 +49,6 @@ async function getMessagesByChatId(chatId) {
         },
         content: tempMes.content
       };
-      console.log(message.sender);
-
       chatService.addMessage(chatId,message);
       return message;
     } catch (error) {
