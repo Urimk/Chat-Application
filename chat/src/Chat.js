@@ -22,10 +22,11 @@ function Chat({ curUser, setChats, msgIdCounter }) {
       newSocket.addEventListener('message', (event) => {
         const data = JSON.parse(event.data);
         if (data.event === 'chatRemoved') {
-          const deletedChatId = data.data.deletedChat._id;
+          const deletedChatId = data.data.deletedChat.id;
           setFetchedChats((prevChats) => prevChats.filter((c) => c.id !== deletedChatId));
-          if(data.data.deletedChat.users.find((u)=> u.username === selectedContact) ){
-            selectedContact(null)
+          if(data.data.deletedChat.users.find((u)=> u.username === selectedContact.username) ){
+            setSelectedContact(null)
+            setCurChat(null)
           }
           
         }
@@ -35,7 +36,7 @@ function Chat({ curUser, setChats, msgIdCounter }) {
         newSocket.close();
       };
     }
-  }, []);
+  }, [selectedContact,setSelectedContact,setCurChat]);
 
 
   const handleContactSelect = (chat) => {
