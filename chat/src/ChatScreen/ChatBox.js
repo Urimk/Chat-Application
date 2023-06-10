@@ -18,13 +18,14 @@ function ChatBox({ chat, user, selectedContact, setChat, updateChatMessages, han
 
     socket.current.addEventListener("message", (event) => {
       const data = JSON.parse(event.data);
-      if (data.event === "chatModified" && data.data.updatedChat.users.find((u) => u.username === user.username)) {
+      console.log(selectedContact);
+      if (data.event === "chatModified" && chat && data.data.updatedChat.id === chat.id) {
+        console.log(chat);
+        console.log("hi");
         const updatedChatId = data.data.updatedChat.id;
         const updatedChatMessages = data.data.updatedChat.messages;
-        console.log(data.data.updatedChat.messages);
         setChatMessages(updatedChatMessages);
         updateChatMessages(updatedChatId, updatedChatMessages);
-        console.log(chatMessages);
       }
     });
 
