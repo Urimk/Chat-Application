@@ -4,10 +4,9 @@ import ChatButtons from "./ChatButtons.js";
 import Message from "./Message.js";
 import SendMessage from "./SendMessage.js";
 
-function ChatBox({ chat, user, selectedContact,setSelectedContact, setChat, updateChatMessages, handleDeleteChat, updateLastMessage, getMessages}) {
+function ChatBox({ chat, user, selectedContact, setChat, updateChatMessages, handleDeleteChat, updateLastMessage, getMessages}) {
   const [chatMessages, setChatMessages] = useState([]);
   const messagesContainerRef = useRef(null);
-  let messages = chat ? chat.messages || [] : [];
   const socket = useRef(null);
 
   useEffect(() => {
@@ -19,8 +18,8 @@ function ChatBox({ chat, user, selectedContact,setSelectedContact, setChat, upda
 
     socket.current.addEventListener("message", async (event) => {
       const data = JSON.parse(event.data);
-      if (data.event === "chatModified"&&
-      data.data.updatedChat.users.find((u) => u.username === user.username)) {
+      console.log(selectedContact);
+      if (data.event === "chatModified" && chat && data.data.updatedChat.id === chat.id) {
         const updatedChatId = data.data.updatedChat.id;
         const updatedChatMessages = data.data.updatedChat.messages;
         setChatMessages(updatedChatMessages);
@@ -32,7 +31,6 @@ function ChatBox({ chat, user, selectedContact,setSelectedContact, setChat, upda
           setSelectedContact(null)
           messages = []
         }
-      
     });
 
     return () => {
@@ -48,6 +46,12 @@ function ChatBox({ chat, user, selectedContact,setSelectedContact, setChat, upda
         })
     }
   }, [chat]);
+
+  useEffect(() => {
+    setChatMessages(chatMessages);
+  }, [chatMessages]);
+  
+
   
 
 
@@ -58,19 +62,19 @@ function ChatBox({ chat, user, selectedContact,setSelectedContact, setChat, upda
     }
   }, [chat]);
 
-  async function handleSendMessage (messageText) {
+  async function handleSendMessage(messageText) {
     if (chat) {
       const msg = { msg: messageText };
-      const id = chat.id
+      const id = chat.id;
       const res = await fetch(`http://localhost:5000/api/Chats/${id}/Messages`, {
-        method: 'post',
+        method: "post",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
         },
-        'body': JSON.stringify(msg)
+        body: JSON.stringify(msg),
       });
-      if (res.status != 200){
+      if (res.status != 200) {
         const errorMessage = await res.text();
         alert(res.status + " " + res.statusText + "\n" + errorMessage);
       } else {
@@ -78,39 +82,28 @@ function ChatBox({ chat, user, selectedContact,setSelectedContact, setChat, upda
         const newMessage = {
           id: data.id,
           created: data.created,
-          sender:
-          {
-            "username": data.sender.username,
-            "displayName": data.sender.displayName,
-            "profilePic": data.sender.profilePic
+          sender: {
+            username: data.sender.username,
+            displayName: data.sender.displayName,
+            profilePic: data.sender.profilePic,
           },
-          content: data.content
-        }
-        const updatedMessages = [
-          ...(chat.messages || []),
-          newMessage,
-        ];
-          
+          content: data.content,
+        };
+        const updatedMessages = [...chatMessages, newMessage];
         const updatedChat = {
           ...chat,
           messages: updatedMessages,
-          lastMessage: newMessage
+          lastMessage: newMessage,
         };
-    
-        setChatMessages((prevMessages) => ({
-          ...prevMessages,
-          [chat]: {
-            messages: updatedMessages,
-            lastMessage: newMessage
-          },
-        }));
+
+        setChatMessages(updatedMessages);
         updateChatMessages(chat.id, updatedMessages);
         setChat(updatedChat);
         updateLastMessage(updatedChat);
       }
-    }    
+    }
   }
-  
+
   return (
     <div id="chat_window">
       {selectedContact && (
@@ -120,21 +113,18 @@ function ChatBox({ chat, user, selectedContact,setSelectedContact, setChat, upda
           <span className="username">{selectedContact.displayName}</span>
         </>
       )}
-      <ChatButtons chat={chat} handleDeleteChat={
-        handleDeleteChat
-      }/>
+      <ChatButtons chat={chat} handleDeleteChat={handleDeleteChat}/>
       <div id="messages" ref={messagesContainerRef}>
-      {messages.slice().reverse().map((message, index) => {
-
-        const incoming = message.sender.username === user.username ? 0 : 1;
-        return (
+        {chatMessages.slice().reverse().map((message, index) => {
+          const incoming = message.sender.username === user.username ? 0 : 1;
+          return (
             <Message
-            key={index}
-            text={message.content}
-            dateAndTime={message.created}
-            incoming={incoming}
+              key={index}
+              text={message.content}
+              dateAndTime={message.created}
+              incoming={incoming}
             />
-        );
+          );
         })}
       </div>
       <SendMessage
@@ -144,5 +134,6 @@ function ChatBox({ chat, user, selectedContact,setSelectedContact, setChat, upda
     </div>
   );
 }
+
 
 export default ChatBox;
