@@ -6,12 +6,38 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 
 
-function Chat({curUser, setChats, msgIdCounter}) {
-
+function Chat({ curUser, setChats, msgIdCounter }) {
   const [curChat, setCurChat] = useState(null);
   const [selectedContact, setSelectedContact] = useState(null);
   const [fetchedChats, setFetchedChats] = useState([]);
   const navigate = useNavigate();
+  const [socket, setSocket] = useState(null);
+  const [chatRemove, setChatRemove] = useState(true);
+
+  useEffect(() => {
+    const newSocket = new WebSocket('ws://localhost:5000'); 
+    setSocket(newSocket);
+
+    if (newSocket) {
+      newSocket.addEventListener('message', (event) => {
+        const data = JSON.parse(event.data);
+        if (data.event === 'chatRemoved') {
+          const deletedChatId = data.data.deletedChat.id;
+          setFetchedChats((prevChats) => prevChats.filter((c) => c.id !== deletedChatId));
+          if(data.data.deletedChat.users.find((u)=> u.username === selectedContact.username) ){
+            setSelectedContact(null)
+            setCurChat(null)
+          }
+          
+        }
+      });
+
+      return () => {
+        newSocket.close();
+      };
+    }
+  }, [selectedContact,setSelectedContact,setCurChat]);
+
 
   const handleContactSelect = (chat) => {
     setCurChat(chat);
@@ -49,14 +75,17 @@ function Chat({curUser, setChats, msgIdCounter}) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${curUser.token}`
       },
-    });
+    })
     if (res.status != 204){
       const errorMessage = await res.text();
       alert(res.status + " " + res.statusText + "\n" + errorMessage);
-    } else {
+      return;
+    }else{
       setFetchedChats(prevChats => prevChats.filter(c => c.id !== id));
       setSelectedContact(null);
+      setCurChat(null)
     }
+    
   }
 
   async function updateLastMessage(updatedChat) {

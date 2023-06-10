@@ -4,12 +4,42 @@ import ChatButtons from "./ChatButtons.js";
 import Message from "./Message.js";
 import SendMessage from "./SendMessage.js";
 
-
-function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, handleDeleteChat, updateLastMessage, getMessages}) {
+function ChatBox({ chat, user, selectedContact,setSelectedContact, setChat, updateChatMessages, handleDeleteChat, updateLastMessage, getMessages}) {
   const [chatMessages, setChatMessages] = useState([]);
   const messagesContainerRef = useRef(null);
-  const messages = chat ? chat.messages || [] : [];
+  let messages = chat ? chat.messages || [] : [];
+  const socket = useRef(null);
 
+  useEffect(() => {
+    socket.current = new WebSocket("ws://localhost:5000");
+
+    socket.current.addEventListener("open", () => {
+      console.log("WebSocket connection established");
+    });
+
+    socket.current.addEventListener("message", async (event) => {
+      const data = JSON.parse(event.data);
+      if (data.event === "chatModified"&&
+      data.data.updatedChat.users.find((u) => u.username === user.username)) {
+        const updatedChatId = data.data.updatedChat.id;
+        const updatedChatMessages = data.data.updatedChat.messages;
+        setChatMessages(updatedChatMessages);
+        updateChatMessages(updatedChatId, updatedChatMessages);
+        messages = updatedChatMessages;
+      } 
+      else if(data.event === "chatRemoved"&&
+      data.data.deletedChat.users.find((u) => u.username === selectedContact.username)) {
+          setSelectedContact(null)
+          messages = []
+        }
+      
+    });
+
+    return () => {
+      socket.current.close();
+    };
+  }, [selectedContact,setSelectedContact,messages]);
+  
   useEffect(() => {
     if (chat) {
       getMessages(chat)
@@ -90,7 +120,9 @@ function ChatBox({chat, user, selectedContact, setChat, updateChatMessages, hand
           <span className="username">{selectedContact.displayName}</span>
         </>
       )}
-      <ChatButtons chat={chat} handleDeleteChat={handleDeleteChat}/>
+      <ChatButtons chat={chat} handleDeleteChat={
+        handleDeleteChat
+      }/>
       <div id="messages" ref={messagesContainerRef}>
       {messages.slice().reverse().map((message, index) => {
 

@@ -43,7 +43,7 @@ async function getAllChats(user) {
       const lastMessage = chat.messages.length > 0 ? chat.messages[chat.messages.length - 1] : null;
 
       return {
-        id: chat.id,
+        id: chat.id.toString(),
         user: otherUser,
         lastMessage: lastMessage
       };
@@ -120,7 +120,11 @@ const addMessage = async (chatId,msg) => {
 const deleteChat = async (id) => {
   try {
     const deletedChat = await Chat.findOneAndRemove({ _id: id });
-    return deletedChat;
+    return {
+      id: deletedChat._id,
+      users: deletedChat.users,
+      messages: deletedChat.messages
+    }
   } catch (error) {
     console.error('Failed to delete chat:', error);
     throw error;

@@ -1,5 +1,7 @@
 
 MessageService = require('../services/message.js');
+const chatController = require('./chat.js');
+const wss = chatController.wss; 
 
 function printError(res, error) {
     if (error.statusCode === 500) {
@@ -27,7 +29,9 @@ async function postMessage(req, res) {
     const content = req.body.msg.toString();
     try {
       const message = await MessageService.postMessage(chatId, username, content);
+      chatController.modifyChatsSocket(chatId);
       res.json(message);
+      
     } catch (error) {
         printError(res, error);         
     }
